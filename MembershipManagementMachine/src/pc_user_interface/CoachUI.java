@@ -1,16 +1,16 @@
 package pc_user_interface;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+
 import javax.swing.*;
-import java.util.*;
-import java.io.*;
-import java.awt.*;
 
 public class CoachUI extends JFrame{
 	
@@ -19,10 +19,12 @@ public class CoachUI extends JFrame{
 	private static ArrayList<User> list;
 
 	private JPanel layout, sendMessages, nameInput;
+	private JSplitPane split;
 	private JButton send;
 	private JLabel name;
 	private JTextField text;
 	private JTextArea messageBox, memberList;
+	private JScrollPane scrollV, memberScroll;
 
 	public CoachUI(ArrayList<User> users)
 	{
@@ -38,13 +40,20 @@ public class CoachUI extends JFrame{
 		layout = new JPanel(new GridLayout(1,2));
 		sendMessages = new JPanel(new BorderLayout());
 		nameInput = new JPanel(new FlowLayout());
+		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		split.setDividerLocation(2*FWIDTH / 3);
+		split.setEnabled(false);
 		
 		//nameInput panel stuff
 		name = new JLabel("Name");
-		text = new JTextField(30);
+		text = new JTextField(20);
 		
 		//sendMessages panel stuff
 		messageBox = new JTextArea();
+		messageBox.setLineWrap(true);
+		messageBox.setWrapStyleWord(true);
+		scrollV = new JScrollPane(messageBox);
+		scrollV.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		send = new JButton("send");
 		send.addActionListener(new ActionListener()
 		{
@@ -64,33 +73,34 @@ public class CoachUI extends JFrame{
 						member.sendNotification(message);
 					}
 				}*/
-				
+				messageBox.setText(messageBox.getText() + "\n\nMessage Sent to " + member);
 			}
 		});
 		
 		//layout panel stuff
 		memberList = new JTextArea();
+		memberList.setFont(memberList.getFont().deriveFont(25f));
 		memberList.setEnabled(false);
+		memberScroll = new JScrollPane(memberList);
+		memberScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		Iterator iterator = list.iterator();
 		
 		for (int i = 0; i < list.size(); i++)
 		{
 			User temp = (User)iterator.next();
-			String name = temp.getUserFirstName();
-			System.out.println(name);
-			memberList.append(name + "\n");
+			memberList.append(temp.getUserFirstName() + " " + temp.getUserLastName() + "\n");
 		}
 		
 		//adding panels
 		nameInput.add(name);
 		nameInput.add(text);
 		sendMessages.add(nameInput, BorderLayout.NORTH);
-		sendMessages.add(messageBox, BorderLayout.CENTER);
+		sendMessages.add(scrollV, BorderLayout.CENTER);
 		sendMessages.add(send, BorderLayout.SOUTH);
-		layout.add(sendMessages);
-		layout.add(memberList);
+		split.add(sendMessages);
+		split.add(memberScroll);
 				
-		add(layout);
+		add(split);
 		setVisible(true);
 	}
 }
