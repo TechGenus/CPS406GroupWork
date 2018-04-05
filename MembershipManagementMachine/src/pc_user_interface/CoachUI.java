@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
-
 import javax.swing.*;
 
 public class CoachUI extends JFrame{
@@ -52,6 +50,18 @@ public class CoachUI extends JFrame{
 				//obtaining name and message to send
 				String member = text.getText();
 				String message = messageBox.getText();
+				Iterator iterator = list.iterator();
+				
+				/*
+				for (int i = 0; i < list.size(); i++)
+				{
+					
+					if (((User)iterator.next()).getUserUsername() == member)
+					{
+						member.sendNotification(message);
+					}
+				}*/
+				
 			}
 		});
 		
@@ -59,11 +69,14 @@ public class CoachUI extends JFrame{
 		memberList = new JTextArea();
 		memberList.setEnabled(false);
 		Iterator iterator = list.iterator();
-		/*while (iterator.hasNext())
+		
+		for (int i = 0; i < list.size(); i++)
 		{
-			memberList.add();
-			 
-		}*/
+			User temp = (User)iterator.next();
+			String name = temp.getUserFirstName();
+			System.out.println(name);
+			memberList.append(name + "\n");
+		}
 		
 		//adding panels
 		nameInput.add(name);
