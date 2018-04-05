@@ -1,0 +1,17 @@
+LAFitness
+Balance Sheet
+Date
+
+Assets:
+	revenue			$ 10
+				------
+	total assets		$ 10
+
+Liabilities:
+	expenses		$ 1
+	accounts payable	$ 1
+	tax			$ 1
+				------
+	total liabilities	$ 3
+
+Net Income:			$ 7

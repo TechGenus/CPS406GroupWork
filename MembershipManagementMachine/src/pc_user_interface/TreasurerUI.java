@@ -26,6 +26,7 @@ public class TreasurerUI extends JFrame{
 	private int				frameHeight = 600;
 	
 	private String			userName;
+	private Date			date;
 	
 	private ActionListener 	listener;
 	
@@ -71,7 +72,6 @@ public class TreasurerUI extends JFrame{
 		setSize(frameWidth, frameHeight);
 		setMinimumSize(new Dimension(frameWidth, frameHeight));
 		//frame.setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	private void fillFrame() {
@@ -91,7 +91,7 @@ public class TreasurerUI extends JFrame{
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 		
 		// this line allows u to change the tab index to focus on what ever tab u want
-		tabbedPane.setSelectedIndex(0);
+		tabbedPane.setSelectedIndex(1);
 		
 		return tabbedPane;
 	}
@@ -306,6 +306,7 @@ public class TreasurerUI extends JFrame{
 			this.btnDescription = description;
 		}
 		
+		@Override
 		public void actionPerformed(ActionEvent event) {
 			// TODO Auto-generated method stub
 			try {
@@ -326,7 +327,7 @@ public class TreasurerUI extends JFrame{
 			outputIncomeStatement();
 		}
 		else if (btnDescription.equals("btnSave")) {
-			fileOutputTest();
+			saveIncomeStatement();
 		}
 		else if (btnDescription.equals("btnSend")) {
 			System.out.println("btnSend");
@@ -340,7 +341,13 @@ public class TreasurerUI extends JFrame{
 		int tax = Integer.parseInt(textField_tax.getText());
 		int liabilities = expenses + accountsPayable + tax;
 		int netIncome = revenue - liabilities;
-		incomeStatementTextArea.setText("LAFitness\r\nBalance Sheet\r\nDate\r\n\nAssets:\r\n"
+		date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		
+		incomeStatementTextArea.setText("LAFitness\r\n"
+				+ "Balance Sheet\r\n"
+				+ "Date: " + dateFormat.format(date) + "\r\n\n"
+				+ "Assets:\r\n"
 				+"	revenue			$ " + textField_revenue.getText() + "\r\n"
 				+"				------\r\n"
 				+"	total assets		$ " + textField_revenue.getText() + "\r\n\r\n"
@@ -354,31 +361,24 @@ public class TreasurerUI extends JFrame{
 	}
 	
 	private void saveIncomeStatement() {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
-		try{
-			if (incomeStatementTextArea.getText().equals("")) throw new IOException("Cannot save an empty file");
-		    File incomeStatementFile = new File("LAFitnessIncomeStatement" + dateFormat.format(date).toString() + ".txt");
-		    incomeStatementFile.createNewFile();
-		    BufferedWriter output = new BufferedWriter(new FileWriter(incomeStatementFile));
-		    output.write(incomeStatementTextArea.getText());
-		    output.close();
-		}
-		catch (IOException e) {
-			JOptionPane.showMessageDialog(null, e);
-		}
-	}
-	private void fileOutputTest() {
+		DateFormat dateFormat = new SimpleDateFormat(" yyyy_MM_dd HH_mm_ss");
 		
 		File dir = new File("IncomeStatements");
-		File file = new File("IncomeStatements/LAFitnessIncomeStatement.txt");
+		File file = new File("IncomeStatements/LAFitnessIncomeStatement" + dateFormat.format(date) + ".txt");
+		
 		try {
+			if (incomeStatementTextArea.getText().equals("")) throw new IOException("Cannot save an empty file");
+			
 			dir.mkdir();
+			
 			PrintWriter output = new PrintWriter(file);
 			output.printf(incomeStatementTextArea.getText());
 			output.close();
-		} catch (IOException e) {
-			System.out.println(e);
+			
+			JOptionPane.showMessageDialog(null, "File saved");
+		}
+		catch (IOException e) {
+			JOptionPane.showMessageDialog(null, e);
 		}
 	}
 }
