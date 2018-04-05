@@ -8,12 +8,15 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import javax.swing.*;
+import java.util.*;
+import java.io.*;
+import java.awt.*;
 
 public class CoachUI extends JFrame{
 	
 	private static final int FHEIGHT = 600;
 	private static final int FWIDTH = 800;
-	private static LinkedList list;
+	private static ArrayList<User> list;
 
 	private JPanel layout, sendMessages, nameInput;
 	private JButton send;
@@ -21,7 +24,7 @@ public class CoachUI extends JFrame{
 	private JTextField text;
 	private JTextArea messageBox, memberList;
 
-	public CoachUI(LinkedList users)
+	public CoachUI(ArrayList<User> users)
 	{
 		list = users;
 		constructUI();

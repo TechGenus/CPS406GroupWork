@@ -1,16 +1,19 @@
 package pc_user_interface;
 import javax.swing.*;
+
 import java.awt.event.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
 public class LoginInterface 
 {
 	JTextField textField;
 	JPasswordField textField2;
-	LoginWork work;
+	IOWork decryptor;
 	public LoginInterface()
 	{
 		JFrame screen = new JFrame();
 		JPanel page = new JPanel();
-		work = new LoginWork();
 		screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		screen.setTitle("Login");
 		screen.setSize(260, 120);
@@ -42,12 +45,33 @@ public class LoginInterface
 			public void actionPerformed(ActionEvent e)
 			{
 				User c = null;
+				ArrayList<User> userList = new ArrayList<User>();
+				decryptor = new IOWork();
+				File folder = new File("Users");
+				File[] temp = folder.listFiles();
+				for(int i = 0;i < temp.length;i++)
+				{
+					userList.add((User)decryptor.deserialize(temp[i].getAbsolutePath()));
+				}
 				String username = textField.getText();
 				String password = new String(textField2.getPassword());
-				c = work.decrypt("Users/" + username + ".ser");
+				c = (User)decryptor.deserialize("Users/" + username + ".ser");
 				if(c != null)
 				{
-					System.out.println(c.getUserPassword());
+					if(c.getUserFlag() == 0)
+					{
+						TreasurerUI treasurerUI = new TreasurerUI("Membership Management Machine", "Jedi Master Luigibird");
+					}
+					if(c.getUserFlag() == 1)
+					{
+						System.out.println(userList.size());
+						System.out.println(userList.get(1));
+						CoachUI coachUI = new CoachUI(userList);
+					}
+					if(c.getUserFlag() == 2)
+					{
+						CustomerUI customerUI = new CustomerUI();
+					}
 				}
 			}
 		});

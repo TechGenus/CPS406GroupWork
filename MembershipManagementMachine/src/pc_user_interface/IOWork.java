@@ -19,21 +19,15 @@ public class IOWork
 			in.close();
 			fileIn.close();
 		}
-		catch(IOException e)
-		{
-			
-		}
-		catch(ClassNotFoundException e)
-		{
-			
-		}
+		catch(IOException e) {}
+		catch(ClassNotFoundException e) {}
 		return c;
 	}
-	public void serialize(Object o)
+	public void serialize(User o)
 	{
 		try
 		{
-			FileOutputStream fileout = new FileOutputStream("Users/" + ".ser");
+			FileOutputStream fileout = new FileOutputStream("Users/"+ o.getUserUsername() + ".ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileout);
 			out.writeObject(o);
 			out.close();

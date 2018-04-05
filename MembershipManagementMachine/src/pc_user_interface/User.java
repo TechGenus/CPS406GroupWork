@@ -122,6 +122,10 @@ public class User implements java.io.Serializable {
 	{
 		return this.salary;
 	}
+	public int getUserFlag()
+	{
+		return this.userFlag;
+	}
 	
 	
 	public void setUserFirstName(String userFirstName){
