@@ -2,9 +2,15 @@ package pc_user_interface;
 
 import java.util.*;
 import javax.swing.*;
+import java.io.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
@@ -318,10 +324,10 @@ public class TreasurerUI extends JFrame{
 
 	private void buttonPressed(String btnDescription) {
 		if (btnDescription.equals("btnOutputIncomeStatement")) {
-			incomeStatementTextArea.setText(btnDescription);
+			outputIncomeStatement();
 		}
 		else if (btnDescription.equals("btnSave")) {
-			System.out.println("btnSave");
+			fileOutputTest();
 		}
 		else if (btnDescription.equals("btnSend")) {
 			System.out.println("btnSend");
@@ -330,17 +336,50 @@ public class TreasurerUI extends JFrame{
 	
 	private void outputIncomeStatement() {
 		int	expenses =  Integer.parseInt(textField_expenses.getText());
-		int total_liabilities = ;
-		incomeStatementTextArea.setText("LAFItness\nBalance Sheet\nDate\n\nAssets:\n"
-				+"	revenue			$ " + textField_revenue.getText() + "\n"
-				+"				------\n"
-				+"	total assets		$ " + textField_revenue.getText() + "\n\n"
-				+"Liabilities:\n"
-				+"	expenses		$ " + textField_expenses.getText() + "\n"
-				+"	accounts payable	$ " + textField_accountsPayable.getText() + "\n"
-				+"	tax			$ " + textField_tax.getText() + "\n"
-				+"				------\n"
-				+"	total liabilities	$ " + textF + "\n\n"
-				+"Net Income:			$ 1000\n");
+		int revenue = Integer.parseInt(textField_revenue.getText());
+		int accountsPayable = Integer.parseInt(textField_accountsPayable.getText());
+		int tax = Integer.parseInt(textField_tax.getText());
+		int liabilities = expenses + accountsPayable + tax;
+		int netIncome = revenue - liabilities;
+		incomeStatementTextArea.setText("LAFitness\r\nBalance Sheet\r\nDate\r\n\nAssets:\r\n"
+				+"	revenue			$ " + textField_revenue.getText() + "\r\n"
+				+"				------\r\n"
+				+"	total assets		$ " + textField_revenue.getText() + "\r\n\r\n"
+				+"Liabilities:\r\n"
+				+"	expenses		$ " + textField_expenses.getText() + "\r\n"
+				+"	accounts payable	$ " + textField_accountsPayable.getText() + "\r\n"
+				+"	tax			$ " + textField_tax.getText() + "\r\n"
+				+"				------\r\n"
+				+"	total liabilities	$ " + liabilities + "\r\n\r\n"
+				+"Net Income:			$ " + netIncome + "\r\n");
+	}
+	
+	private void saveIncomeStatement() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		try{
+			if (incomeStatementTextArea.getText().equals("")) throw new IOException("Cannot save an empty file");
+		    File incomeStatementFile = new File("LAFitnessIncomeStatement" + dateFormat.format(date).toString() + ".txt");
+		    incomeStatementFile.createNewFile();
+		    BufferedWriter output = new BufferedWriter(new FileWriter(incomeStatementFile));
+		    output.write(incomeStatementTextArea.getText());
+		    output.close();
+		}
+		catch (IOException e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
+	}
+	private void fileOutputTest() {
+		
+		File dir = new File("IncomeStatements");
+		File file = new File("IncomeStatements/LAFitnessIncomeStatement.txt");
+		try {
+			dir.mkdir();
+			PrintWriter output = new PrintWriter(file);
+			output.printf(incomeStatementTextArea.getText());
+			output.close();
+		} catch (IOException e) {
+			System.out.println(e);
+		}
 	}
 }
