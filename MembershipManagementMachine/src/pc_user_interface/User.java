@@ -1,5 +1,6 @@
 package pc_user_interface;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class User implements java.io.Serializable {
@@ -59,33 +60,37 @@ public class User implements java.io.Serializable {
 	// user METHODS
 	public void addMessage(String message)
 	{
-		this.notifications.concat(message + "\n");
+		this.notifications += message + "\n";
+	}
+	
+	public void pay()
+	{
+		if(this.hasPaid == true){
+			System.out.println("You have already paid for this month");
+		}	
+		else{
+			this.hasPaid = true;
+		}
 	}
 	
 	// COACH METHODS
-	/*
-	private void sendMessage(String message, String usrname)
+	public void sendMessage(String message, String usrname, ArrayList<User> users)
 	{
-		Iterator Iterator2 = linkedList.iterator();
-        while (Iterator2.hasNext()) {
-            System.out.println(Iterator2.next());
-            if(Iterator2.next().username == usrname)
+        for (int counter = 0; counter < users.size(); counter++) {
+            if(users.get(counter).getUserUsername() == usrname)
             {
-            	Iterator2.next().addMessage(message);
+            	users.get(counter).addMessage(message);
             	break;
             }
         }
 	}
 	
-	private void sendNotification(String message)
+	public void sendNotification(String message, ArrayList<User> users)
 	{
-		Iterator Iterator = linkedList.iterator();
-        while (Iterator.hasNext()) {
-            System.out.println(Iterator.next());
-            Iterator.next().addMessage(message);
+        for (int counter = 0; counter < users.size(); counter++) { 		       
+          users.get(counter).addMessage(message);		
         }
 	}
-	*/
 	
 	
 	public int getUserNumber() {
