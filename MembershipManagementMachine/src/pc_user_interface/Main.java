@@ -20,5 +20,6 @@ public class Main {
 		
 		TreasurerUI treasurerUI = new TreasurerUI("Membership Management Machine", "Jedi Master Luigibird");
 		CustomerUI customerUI = new CustomerUI();
+		CoachUI coachUI = new CoachUI(Users);
 	}
 }
