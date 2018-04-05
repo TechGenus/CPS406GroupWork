@@ -10,11 +10,11 @@ public class LoginInterface
 	JTextField textField;
 	JPasswordField textField2;
 	IOWork decryptor;
+	JFrame screen;
 	public LoginInterface()
 	{
-		JFrame screen = new JFrame();
+		screen = new JFrame();
 		JPanel page = new JPanel();
-		screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		screen.setTitle("Login");
 		screen.setSize(260, 120);
 		screen.setResizable(false);
@@ -60,12 +60,10 @@ public class LoginInterface
 				{
 					if(c.getUserFlag() == 0)
 					{
-						TreasurerUI treasurerUI = new TreasurerUI("Membership Management Machine", "Jedi Master Luigibird");
+						TreasurerUI treasurerUI = new TreasurerUI("Membership Management Machine", c.getUserFirstName());
 					}
 					if(c.getUserFlag() == 1)
 					{
-						System.out.println(userList.size());
-						System.out.println(userList.get(1));
 						CoachUI coachUI = new CoachUI(userList);
 					}
 					if(c.getUserFlag() == 2)

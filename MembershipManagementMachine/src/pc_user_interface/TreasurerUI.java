@@ -306,7 +306,6 @@ public class TreasurerUI extends JFrame{
 			this.btnDescription = description;
 		}
 		
-		@Override
 		public void actionPerformed(ActionEvent event) {
 			// TODO Auto-generated method stub
 			try {
