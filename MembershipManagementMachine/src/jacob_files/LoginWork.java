@@ -7,14 +7,14 @@ public class LoginWork
 		boolean result = false;
 		return result;
 	}
-	public Customer decrypt(String fileName)
+	public User decrypt(String fileName)
 	{
-		Customer c = null;
+		User c = null;
 		try
 		{
 			FileInputStream fileIn = new FileInputStream(fileName);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
-			c = (Customer) in.readObject();
+			c = (User) in.readObject();
 			in.close();
 			fileIn.close();
 		}
