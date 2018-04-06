@@ -41,6 +41,7 @@ public class CoachUI extends JFrame{
 		setSize(FWIDTH, FHEIGHT);
 		
 		//panels
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layout = new JPanel(new GridLayout(1,2));
 		sendMessages = new JPanel(new BorderLayout());
 		nameInput = new JPanel(new FlowLayout());

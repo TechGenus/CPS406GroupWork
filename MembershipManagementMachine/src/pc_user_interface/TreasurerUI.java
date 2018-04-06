@@ -1,9 +1,10 @@
 package pc_user_interface;
 
 import java.util.*;
-import javax.swing.*;
-import java.io.*;
 
+import javax.swing.*;
+
+import java.io.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import com.sun.javafx.property.adapter.PropertyDescriptor.Listener;
 
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.MatteBorder;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -65,6 +67,7 @@ public class TreasurerUI extends JFrame{
 	private JLabel 			lblInChatWith;
 	
 	public TreasurerUI(String frameTitle, String userName) {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(frameTitle);
 		this.userName = userName;
 		setVisible(true);

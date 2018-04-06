@@ -6,8 +6,10 @@ package pc_user_interface;
  */
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+
 import java.util.Random;
 
 public class CustomerUI extends JFrame{
@@ -111,6 +113,7 @@ public class CustomerUI extends JFrame{
     {
     	p = new JPanel();
     	user = u;
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
     	PaymentListener payment = new PaymentListener();
     	

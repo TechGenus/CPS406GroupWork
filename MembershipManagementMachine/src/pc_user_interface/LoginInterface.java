@@ -13,6 +13,7 @@ public class LoginInterface implements ActionListener
 	public LoginInterface()
 	{
 		screen = new JFrame();
+		screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel page = new JPanel();
 		screen.setTitle("Login");
 		screen.setSize(260, 120);
