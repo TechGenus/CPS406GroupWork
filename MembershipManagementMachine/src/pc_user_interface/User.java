@@ -36,6 +36,7 @@ public class User implements java.io.Serializable {
 		  this.successfulPayments = 0;  
 		  this.attendedClasses = 0;
 		  this.userFlag = 2;
+		  this.notifications = "";
 		  
 		  // print notifications on user GUI (inside a textbox on GUI )
 	   }
