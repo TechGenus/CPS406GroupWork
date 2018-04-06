@@ -61,7 +61,7 @@ public class User implements java.io.Serializable {
 	// user METHODS
 	public void addMessage(String message)
 	{
-		this.notifications += message + "\n";
+		this.notifications += message + "\r\n";
 	}
 	
 	public void pay()
@@ -131,6 +131,10 @@ public class User implements java.io.Serializable {
 	public int getUserFlag()
 	{
 		return this.userFlag;
+	}
+	public String getNotification()
+	{
+		return this.notifications;
 	}
 	
 	

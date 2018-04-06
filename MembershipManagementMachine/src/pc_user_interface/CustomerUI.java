@@ -35,7 +35,7 @@ public class CustomerUI extends JFrame{
     private JTextField tfDebitNumber;
     private JTextField tfVerificationCode;
 
-    private JTextArea taNotification;
+    private JTextArea notification;
 
     private ActionListener paymentListener;
     private ActionListener confirmListener;
@@ -99,14 +99,14 @@ public class CustomerUI extends JFrame{
         }
     }
 
-    public CustomerUI(String firstname)
+    public CustomerUI(User u)
     {
     	p = new JPanel();
     	p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
     	PaymentListener payment = new PaymentListener();
     	
     	JPanel topBar = new JPanel();
-    	curUser = new JLabel("Current user is " + firstname);
+    	curUser = new JLabel("Current user is " + u.getUserFirstName());
     	topBar.add(curUser);
     	topBar.setBackground(Color.WHITE);
     	p.add(topBar);
@@ -123,10 +123,11 @@ public class CustomerUI extends JFrame{
     	holder2.add(btnDebit);
     	p.add(holder2);
     	
-    	taNotification = new JTextArea();
-        taNotification.setEditable(false);
-        taNotification.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Notifications:"), taNotification.getBorder()));
-        p.add(taNotification);
+    	notification = new JTextArea();
+        notification.setEditable(false);
+        notification.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Notifications:"), notification.getBorder()));
+        notification.setText(u.getNotification());
+        p.add(notification);
         
         this.add(p);
         
@@ -301,10 +302,10 @@ public class CustomerUI extends JFrame{
         verificationCodeGotten = tfVerificationCode.getText();
 
         if(lastNameGotten.isEmpty() || firstNameGotten.isEmpty() || dcNumberGotten.isEmpty() || phoneNumberGotten.isEmpty() || addressGotten.isEmpty() || verificationCodeGotten.isEmpty()){
-            taNotification.setText("    Error missing information");
+            notification.setText("    Error missing information");
         }
         else{
-            taNotification.setText("    Payment Successful");
+            notification.setText("    Payment Successful");
         }
     }
 
@@ -317,10 +318,10 @@ public class CustomerUI extends JFrame{
         securityCodeGotten = tfSecurityCode.getText();
 
         if(lastNameGotten.isEmpty() || firstNameGotten.isEmpty() || ccNumberGotten.isEmpty() || phoneNumberGotten.isEmpty() || addressGotten.isEmpty() || securityCodeGotten.isEmpty()){
-            taNotification.setText("    Error missing information");
+            notification.setText("    Error missing information");
         }
         else{
-            taNotification.setText("    Payment Successful");
+            notification.setText("    Payment Successful");
         }
     }
 }
