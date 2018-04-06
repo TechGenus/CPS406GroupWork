@@ -29,6 +29,10 @@ public class CoachUI extends JFrame{
 	private JTextArea messageBox; 
 	private JList memberList;
 	private JScrollPane scrollV, memberScroll;
+	private String userName = "";
+	private String loginName = "";
+	
+	private IOWork work = new IOWork();
 	
 	public CoachUI(ArrayList<User> users)
 	{
@@ -50,7 +54,7 @@ public class CoachUI extends JFrame{
 		split.setEnabled(false);
 		
 		//nameInput panel stuff
-		name = new JLabel("Name");
+		name = new JLabel("Name: ");
 
 		
 		//sendMessages panel stuff
@@ -64,8 +68,13 @@ public class CoachUI extends JFrame{
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-		
-				messageBox.setText(messageBox.getText() + "\n\nMessage Sent to ");
+				if(!messageBox.getText().equals(""))
+				{
+					User user = (User) work.deserialize("Users/" + loginName + ".ser"); 
+					user.addMessage(messageBox.getText());
+					work.serialize(user);
+					messageBox.setText(messageBox.getText() + "\n\nMessage Sent to " + userName);
+				}
 			}
 		});
 		
@@ -75,8 +84,11 @@ public class CoachUI extends JFrame{
 			{
 				if(e.getValueIsAdjusting() == false)
 				{
-					User hold = (User)e.getSource();
-					String name = hold.toString();
+					messageBox.setText("");
+					ListModel hold = memberList.getModel();
+					userName = (hold.getElementAt(memberList.getSelectedIndex())).toString();
+					loginName = ((User)(hold.getElementAt(memberList.getSelectedIndex()))).getUserUsername();
+					name.setText("Name: " + userName);
 				}
 			}
 		}
