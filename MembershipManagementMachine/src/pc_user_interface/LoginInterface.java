@@ -63,17 +63,14 @@ public class LoginInterface implements ActionListener
 			if(c.getUserFlag() == 0)
 			{
 				TreasurerUI treasurerUI = new TreasurerUI("Membership Management Machine", c.getUserFirstName());
-				screen.setVisible(false);
 			}
 			if(c.getUserFlag() == 1)
 			{
 				CoachUI coachUI = new CoachUI(userList);
-				screen.setVisible(false);
 			}
 			if(c.getUserFlag() == 2)
 			{
 				CustomerUI customerUI = new CustomerUI(c);
-				screen.setVisible(false);
 			}
 		}
 	}

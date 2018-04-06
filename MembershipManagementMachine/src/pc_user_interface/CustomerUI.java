@@ -8,12 +8,16 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+import java.util.Random;
 
 public class CustomerUI extends JFrame{
 
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 400;
 
+    private Random r = new Random();
+    
+    private IOWork wrk = new IOWork();
     private JPanel pCredit;
     private JPanel pDebit;
 
@@ -25,6 +29,8 @@ public class CustomerUI extends JFrame{
     private JLabel lblSecurityCode;
     private JLabel lblDebitNumber;
     private JLabel lblVerificationCode;
+    
+    private JLabel stateBox;
 
     private JTextField tfFirstName;
     private JTextField tfLastName;
@@ -46,6 +52,8 @@ public class CustomerUI extends JFrame{
     private JButton btnConfirm2;
 
     private JPanel p;
+    
+    private User user;
     
     private String lastNameGotten;
     private String firstNameGotten;
@@ -102,6 +110,7 @@ public class CustomerUI extends JFrame{
     public CustomerUI(User u)
     {
     	p = new JPanel();
+    	user = u;
     	p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
     	PaymentListener payment = new PaymentListener();
     	
@@ -134,13 +143,15 @@ public class CustomerUI extends JFrame{
         setTitle("Welcome");
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setMinimumSize(new Dimension(400, 400));
+        setResizable(false);
 		setVisible(true);
     }
 
     public void pCredit()
     {
         p.setLayout(new BorderLayout());
-        JPanel pCreditConfrim = new JPanel(new BorderLayout());
+        JPanel pCreditConfrim = new JPanel();
+        pCreditConfrim.setLayout(new BoxLayout(pCreditConfrim, BoxLayout.Y_AXIS));
         pCredit = new JPanel(new GridLayout(6,2));
         
         JPanel p1 = new JPanel();
@@ -207,9 +218,15 @@ public class CustomerUI extends JFrame{
         payingWithCredit.setVisible(true);
         holder.add(payingWithCredit);
         
-        pCreditConfrim.add(pCredit, BorderLayout.CENTER);
-        pCreditConfrim.add(holder,BorderLayout.NORTH);
-        pCreditConfrim.add(pButton, BorderLayout.SOUTH);
+        pCreditConfrim.add(holder);
+        pCreditConfrim.add(pCredit);
+        pCreditConfrim.add(pButton);
+        
+        JPanel panel = new JPanel();
+        stateBox = new JLabel("");
+        stateBox.setVisible(true);
+        panel.add(stateBox);
+        pCreditConfrim.add(panel);
 
         p.add(pCreditConfrim, BorderLayout.NORTH);
 
@@ -217,7 +234,8 @@ public class CustomerUI extends JFrame{
     public void pDebit()
     {
            p.setLayout(new BorderLayout());
-            JPanel pDebitConfrim = new JPanel(new BorderLayout());
+            JPanel pDebitConfrim = new JPanel();
+            pDebitConfrim.setLayout(new BoxLayout(pDebitConfrim, BoxLayout.Y_AXIS));
                 pDebit = new JPanel(new GridLayout(6,2));
                     JPanel p1 = new JPanel();
                     JPanel p2 = new JPanel();
@@ -283,12 +301,16 @@ public class CustomerUI extends JFrame{
                     payingWithDebit.setVisible(true);
                     holder.add(payingWithDebit);
                     
-            pDebitConfrim.add(holder, BorderLayout.NORTH);
-            pDebitConfrim.add(pDebit, BorderLayout.CENTER);
-            pDebitConfrim.add(pButton, BorderLayout.SOUTH);
-
-
-
+            pDebitConfrim.add(holder);
+            pDebitConfrim.add(pDebit);
+            pDebitConfrim.add(pButton);
+            
+            JPanel panel = new JPanel();
+            stateBox = new JLabel("");
+            stateBox.setVisible(true);
+            panel.add(stateBox);
+            pDebitConfrim.add(panel);
+            
         p.add(pDebitConfrim, BorderLayout.NORTH);
 
     }
@@ -302,10 +324,19 @@ public class CustomerUI extends JFrame{
         verificationCodeGotten = tfVerificationCode.getText();
 
         if(lastNameGotten.isEmpty() || firstNameGotten.isEmpty() || dcNumberGotten.isEmpty() || phoneNumberGotten.isEmpty() || addressGotten.isEmpty() || verificationCodeGotten.isEmpty()){
-            notification.setText("    Error missing information");
+            stateBox.setText("Payment information is still missing");
         }
-        else{
-            notification.setText("    Payment Successful");
+        else if(isLetter(firstNameGotten) != true || isLetter(lastNameGotten) != true || isNum(phoneNumberGotten) != true || isNum(dcNumberGotten) != true || isNum(verificationCodeGotten) != true)
+        {
+        	stateBox.setText("Payment information is the wrong format in one of the fields. ");
+        }
+        else
+        {
+            user.setMissedPayments(r.nextInt(5) + 1);
+            user.setAttendedClasses(r.nextInt(5) + 1);
+            user.setHasPaid(true);
+            stateBox.setText("Payment was Successful");
+            wrk.serialize(user);
         }
     }
 
@@ -318,10 +349,39 @@ public class CustomerUI extends JFrame{
         securityCodeGotten = tfSecurityCode.getText();
 
         if(lastNameGotten.isEmpty() || firstNameGotten.isEmpty() || ccNumberGotten.isEmpty() || phoneNumberGotten.isEmpty() || addressGotten.isEmpty() || securityCodeGotten.isEmpty()){
-            notification.setText("    Error missing information");
+        	stateBox.setText("Payment information is still missing");
         }
-        else{
-            notification.setText("    Payment Successful");
+        else if(isLetter(firstNameGotten) != true || isLetter(lastNameGotten) != true || isNum(phoneNumberGotten) != true || isNum(ccNumberGotten) != true || isNum(securityCodeGotten) != true)
+        {
+        	stateBox.setText("Payment information is the wrong format in one of the fields. ");
         }
+        else
+        {
+            user.setMissedPayments(r.nextInt(5) + 1);
+            user.setAttendedClasses(r.nextInt(5) + 1);
+            user.setHasPaid(true);
+            stateBox.setText("Payment was Successful");
+            wrk.serialize(user);
+        }
+    }
+    public boolean isLetter(String input)
+    {
+    	return input.matches("[a-zA-Z]+");
+    }
+    public boolean isNum(String input)
+    {
+    	try
+    	{
+    		Integer.parseInt(input);
+    	}
+    	catch(NumberFormatException e)
+    	{
+    		return false;
+    	}
+    	catch(NullPointerException e)
+    	{
+    		return false;
+    	}
+    	return true;
     }
 }

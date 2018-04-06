@@ -21,7 +21,7 @@ public class User implements java.io.Serializable {
 	
 	
 	
-	// Constructors
+	// Customer constructor below
 	public User (String firstName, String lastName, String address, int cn, String usrname, String pssword) 
 	   {
 	      // set instance variables
@@ -40,7 +40,7 @@ public class User implements java.io.Serializable {
 		  
 		  // print notifications on user GUI (inside a textbox on GUI )
 	   }
-	
+	//Coach constructor below
 	public User (String fname, String lname, String usrname, String pssword, int Salary)
 	{
 		this.userFirstName = fname;
@@ -50,6 +50,7 @@ public class User implements java.io.Serializable {
 		this.salary = Salary;
 		this.userFlag = 1;
 	}
+	//Treasurer constructor below
 	public User(String firstName, String lastName, String usrname, String pssword)
 	{
 		this.userFirstName = firstName;
@@ -88,8 +89,11 @@ public class User implements java.io.Serializable {
 	
 	public void sendNotification(String message, ArrayList<User> users)
 	{
-        for (int counter = 0; counter < users.size(); counter++) { 		       
-          users.get(counter).addMessage(message);		
+        for (int counter = 0; counter < users.size(); counter++) { 	
+        	if(users.get(counter).getUserFlag() == 2)
+        	{
+        		users.get(counter).addMessage(message);		
+        	}
         }
 	}
 	
@@ -162,5 +166,9 @@ public class User implements java.io.Serializable {
 	public void setSalary(int Salary)
 	{
 		this.salary = Salary;
+	}
+	public void setHasPaid(boolean state)
+	{
+		this.hasPaid = state;
 	}
 }
