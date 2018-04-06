@@ -12,16 +12,13 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
-
-import com.sun.javafx.property.adapter.PropertyDescriptor.Listener;
-
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.MatteBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.BasicComboBoxUI.ItemHandler;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
 
 public class TreasurerUI extends JFrame{
 	private int				frameWidth 	= 800;
@@ -31,12 +28,12 @@ public class TreasurerUI extends JFrame{
 	private Date			date;
 	
 	private ActionListener 	listener;
+	private ItemListener	cbHandler;
 	
 	private JMenuBar 		accountsMenuBar;
-	private JMenu			fileMenu;
-	private JMenuItem		newIncomeStatement, open, saveAs, save, exit;
-	private JMenu			helpMenu;
-	private JMenuItem		about, documentation;
+	private JMenu			fileMenu, menuIncomeStatement, menuCustomerFile, helpMenu;
+	private JMenuItem		fmbtnNewIncomeStatement, fmbtnOpenIncomeStatement, fmbtnSaveIncomeStatement, 
+							fmbtnExit, fmbtnNewCustomerFile, about, documentation;
 	
 	private JTabbedPane		tabbedPane;
 	
@@ -50,30 +47,18 @@ public class TreasurerUI extends JFrame{
 	private JButton 		btnOutputIncomeStatement, btnSave;
 	
 	private JSplitPane		accountsTab;
-	private JPanel			accountsChatSplitPanePanel;
-	private JSplitPane		accountsChatSplitPane;
 	private JPanel			customerSortingPanel;
 	private JList 			customerList;
 	private JScrollPane 	customerScrollPane;
-	private JPanel			customerScrollPanePanel;
-	private JPanel 			inputChatTextAreaPanel;
-	private JTextArea 		inputChatTextArea;
-	private JScrollPane 	inputChatScrollPane;
-	private JPanel 			btnSendPanel;
-	private JButton 		btnSend;
-	private JSplitPane 		inputChatSplitPane;
-	private JPanel 			previousChatPanel;
-	private JTextArea 		previousTextArea;
-	private JLabel 			lblInChatWith;
 	
 	public TreasurerUI(String frameTitle, String userName) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(frameTitle);
 		this.userName = userName;
 		setVisible(true);
 		this.fillFrame();
 		setSize(frameWidth, frameHeight);
 		setMinimumSize(new Dimension(frameWidth, frameHeight));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.setResizable(false);
 	}
 	
@@ -94,80 +79,103 @@ public class TreasurerUI extends JFrame{
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 		
 		// this line allows u to change the tab index to focus on what ever tab u want
-		tabbedPane.setSelectedIndex(1);
+		tabbedPane.setSelectedIndex(0);
 		
 		return tabbedPane;
 	}
 	
 	private JSplitPane accountsTab() {
 		accountsTab = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		accountsTab.setDividerLocation(frameWidth / 3);
+		accountsTab.setDividerLocation(2 * frameWidth / 3);
 		accountsTab.setEnabled(false);
 		
 		customerList = 				new JList<JLabel>();
 		customerScrollPane = 		new JScrollPane(customerList);
 		customerSortingPanel = 		new JPanel();
-		customerScrollPanePanel =	new JPanel(new BorderLayout());
 		
 		customerList.add(new JLabel("Hello"));
 		
 		customerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		customerScrollPane.setColumnHeaderView(customerSortingPanel);
 		
-		customerScrollPanePanel.add(customerScrollPane, BorderLayout.CENTER);
-		
-		accountsTab.add(customerScrollPanePanel);
-		accountsTab.add(accountsChatSplitPanePanel());
+		accountsTab.add(customerScrollPane);
+		accountsTab.add(customerOptionsPanel());
 		
 		return accountsTab;
 	}
 	
-	private JSplitPane accountsChatSplitPanePanel() {
-		accountsChatSplitPane = 		new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		accountsChatSplitPane.setDividerLocation(2 * frameHeight / 3);
-		accountsChatSplitPane.setEnabled(false);
+	private JPanel customerOptionsPanel() {
+		JPanel customerOptionsPanel = new JPanel(new GridLayout());
 		
-		accountsChatSplitPane.add(previousChatPanel());
-		accountsChatSplitPane.add(inputChatSplitPane(2 * frameWidth / 3));
+		customerOptionsPanel.add(customerOptionsGrid(), BorderLayout.CENTER);
 		
-		return accountsChatSplitPane;
+		
+		// Panel 2
+		JPanel p2 = new JPanel(new BorderLayout());
+		JButton btnRemoveSelectedAccount = new JButton("Remove selected account");
+		listener = new ButtonListener("btnRemoveSelectedAccount");
+		btnRemoveSelectedAccount.addActionListener(listener);
+		p2.add(btnRemoveSelectedAccount, BorderLayout.SOUTH);
+		
+		customerOptionsPanel.add(p2, BorderLayout.SOUTH);
+		
+		return customerOptionsPanel;
 	}
 	
-	private JPanel previousChatPanel() {
-		previousChatPanel = new JPanel(new BorderLayout());
+	private JPanel customerOptionsGrid() {
+		JPanel gridP1 = new JPanel(new GridLayout(18, 1));
 		
-		lblInChatWith = 	new JLabel(" In Chat With: ");
-		previousTextArea = 	new JTextArea();
-		previousTextArea.setEnabled(false);
+		JPanel gp1 = new JPanel();
+		// --------------------------------------------------------------finish this
+		gridP1.add(gp1);
 		
-		previousChatPanel.add(lblInChatWith, BorderLayout.NORTH);
-		previousChatPanel.add(previousTextArea, BorderLayout.CENTER);
+		JPanel gp2 = new JPanel();
+		JLabel lblUserName =  new JLabel("user name");
+		gp2.add(lblUserName);
+		JTextField textField_userName = new JTextField(14);
+		gp2.add(textField_userName);
+		gridP1.add(gp2);
 		
-		return previousChatPanel;
-	}
-	
-	private JSplitPane inputChatSplitPane(int parentWidth) {
-		inputChatSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		inputChatSplitPane.setDividerLocation(2 * parentWidth / 3);
-		inputChatSplitPane.setEnabled(false);
+		JPanel gp3 = new JPanel();
+		JLabel lblUserPassword =  new JLabel("password");
+		gp3.add(lblUserPassword);
+		JPasswordField passwordField_userPassword = new JPasswordField(14);
+		gp3.add(passwordField_userPassword);
+		gridP1.add(gp3);
 		
-		inputChatTextAreaPanel = 	new JPanel(new BorderLayout());
-		inputChatTextArea = 		new JTextArea();
-		inputChatScrollPane = 		new JScrollPane(inputChatTextArea);
-		btnSendPanel =				new JPanel(new BorderLayout());
-		btnSend =					new JButton("send");
-		listener = 				new ButtonListener("btnSend");
-		btnSend.addActionListener(listener);
+		JPanel gp4 = new JPanel();
+		JLabel lblUserFirstName =  new JLabel("first name");
+		gp4.add(lblUserFirstName);
+		JTextField textField_userFirstName = new JTextField(14);
+		gp4.add(textField_userFirstName);
+		gridP1.add(gp4);
 		
-		inputChatScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-		inputChatTextAreaPanel.add(inputChatScrollPane);
-		btnSendPanel.add(btnSend, BorderLayout.CENTER);		
+		JPanel gp5 = new JPanel();
+		JLabel lblUserLastName =  new JLabel("last name");
+		gp5.add(lblUserLastName);
+		JTextField textField_userLastName = new JTextField(14);
+		gp5.add(textField_userLastName);
+		gridP1.add(gp5);
 		
-		inputChatSplitPane.add(inputChatTextAreaPanel);
-		inputChatSplitPane.add(btnSendPanel);
+		JPanel gp6 = new JPanel();
+		JLabel lblUserAddress =  new JLabel("address");
+		gp6.add(lblUserAddress);
+		JTextField textField_userAddress = new JTextField(15);
+		gp6.add(textField_userAddress);
+		gridP1.add(gp6);
 		
-		return inputChatSplitPane;
+		JPanel gp7 = new JPanel();
+		JLabel lblUserPhoneNumber =  new JLabel("phone number");
+		gp7.add(lblUserPhoneNumber);
+		JTextField textField_userPhoneNumber1 = new JTextField(3);
+		gp7.add(textField_userPhoneNumber1);
+		JTextField textField_userPhoneNumber2 = new JTextField(3);
+		gp7.add(textField_userPhoneNumber2);
+		JTextField textField_userPhoneNumber3 = new JTextField(4);
+		gp7.add(textField_userPhoneNumber3);
+		gridP1.add(gp7);
+		
+		return gridP1;
 	}
 	
 	private JSplitPane incomeAndExpensesTab() {
@@ -177,6 +185,7 @@ public class TreasurerUI extends JFrame{
 		
 		incomeStatementTextArea =			new JTextArea();
 		incomeStatementTextArea.setFont(new Font("Consolas", Font.PLAIN, 12));
+		incomeStatementTextArea.setEditable(false);
 		incomeStatementScrollPane =			new JScrollPane(incomeStatementTextArea);
 		lblIncomeStatement = 				new JLabel(" Income Statement:");
 		
@@ -203,11 +212,12 @@ public class TreasurerUI extends JFrame{
 		incomeStatementOptionsPanel.setBorder(new TitledBorder(null, "Options", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		btnOutputIncomeStatement = 	new JButton("output income statement");
-		listener = 				new ButtonListener("btnOutputIncomeStatement");
+		listener = 					new ButtonListener("btnOutputIncomeStatement");
 		btnOutputIncomeStatement.addActionListener(listener);
 		btnSave =					new JButton("save");
-		listener = 				new ButtonListener("btnSave");
+		listener = 					new ButtonListener("btnSave");
 		btnSave.addActionListener(listener);
+		
 		incomeStatementOptionsPanel.add(btnOutputIncomeStatement);
 		incomeStatementOptionsPanel.add(btnSave);
 		
@@ -220,29 +230,25 @@ public class TreasurerUI extends JFrame{
 		
 		JPanel panel_1 =			new JPanel();
 		lblRevenue = 				new JLabel("revenue $");
-		textField_revenue = 		new JTextField();
-		textField_revenue.setColumns(14);
+		textField_revenue = 		new JTextField(14);
 		panel_1.add(lblRevenue);
 		panel_1.add(textField_revenue);
 		
 		JPanel panel_2 = 			new JPanel();
 		lblExpenses =				new JLabel("expenses $");
-		textField_expenses = 		new JTextField();
-		textField_expenses.setColumns(13);
+		textField_expenses = 		new JTextField(13);
 		panel_2.add(lblExpenses);
 		panel_2.add(textField_expenses);
 		
 		JPanel panel_3 = 			new JPanel();
 		lblAccountsPayable =		new JLabel("accounts payable $");
-		textField_accountsPayable = new JTextField();
-		textField_accountsPayable.setColumns(9);
+		textField_accountsPayable = new JTextField(9);
 		panel_3.add(lblAccountsPayable);
 		panel_3.add(textField_accountsPayable);
 		
 		JPanel panel_4 = 			new JPanel();
 		lblTax = 					new JLabel("tax $");
-		textField_tax = 			new JTextField();
-		textField_tax.setColumns(16);
+		textField_tax = 			new JTextField(16);
 		panel_4.add(lblTax);
 		panel_4.add(textField_tax);
 		
@@ -275,19 +281,40 @@ public class TreasurerUI extends JFrame{
 	private JMenu fileMenu() {
 		fileMenu = new JMenu("File");
 		
-		newIncomeStatement = 	new JMenuItem("new income statement");
-		open = 					new JMenuItem("open");
-		saveAs =				new JMenuItem("save as");
-		save = 					new JMenuItem("save");
-		exit = 					new JMenuItem("exit");
+		menuCustomerFile = new JMenu("Customer");
+		fmbtnNewCustomerFile = 	new JMenuItem("new");
+		listener =	new ButtonListener("fmbtnNewCustomerFile");
+		fmbtnNewCustomerFile.addActionListener(listener);		
+		menuCustomerFile.add(fmbtnNewCustomerFile);
+
+		fmbtnExit = new JMenuItem("Exit");
 		
-		fileMenu.add(newIncomeStatement);
-		fileMenu.add(open);
-		fileMenu.add(saveAs);
-		fileMenu.add(save);
-		fileMenu.add(exit);
+		fileMenu.add(menuIncomeStatement());
+		fileMenu.add(menuCustomerFile);
+		fileMenu.add(fmbtnExit);
 		
 		return fileMenu;
+	}
+	
+	private JMenu menuIncomeStatement() {
+		menuIncomeStatement = new JMenu("Income Statement");
+		
+		fmbtnNewIncomeStatement = 		new JMenuItem("new");
+		listener =	new ButtonListener("fmbtnNewIncomeStatement");
+		fmbtnNewIncomeStatement.addActionListener(listener);
+		menuIncomeStatement.add(fmbtnNewIncomeStatement);
+		
+		fmbtnSaveIncomeStatement = 		new JMenuItem("save");
+		listener =	new ButtonListener("fmbtnSaveIncomeStatement");
+		fmbtnSaveIncomeStatement.addActionListener(listener);
+		menuIncomeStatement.add(fmbtnSaveIncomeStatement);
+		
+		fmbtnOpenIncomeStatement =		new JMenuItem("open");
+		listener =	new ButtonListener("fmbtnOpenIncomeStatement");
+		fmbtnOpenIncomeStatement.addActionListener(listener);
+		menuIncomeStatement.add(fmbtnOpenIncomeStatement);
+		
+		return menuIncomeStatement;
 	}
 	
 	private JMenu helpMenu() {
@@ -302,7 +329,7 @@ public class TreasurerUI extends JFrame{
 		return helpMenu;
 	}
 	
-	class ButtonListener implements ActionListener {
+	public class ButtonListener implements ActionListener {
 		private String btnDescription;
 		
 		public ButtonListener(String description) {
@@ -311,10 +338,22 @@ public class TreasurerUI extends JFrame{
 		
 		public void actionPerformed(ActionEvent event) {
 			try {
-				if (btnDescription.equals("btnOutputIncomeStatement")) {
-					if (textField_revenue.getText().equals("") || textField_expenses.getText().equals("")
-					|| textField_accountsPayable.getText().equals("")) {
+				if (btnDescription.equals("btnOutputIncomeStatement") 
+				|| btnDescription.equals("btnSave")
+				|| btnDescription.equals("fmbtnSaveIncomeStatement")
+				|| btnDescription.equals("fmbtnSaveAsIncomeStatement")) {
+					if (textField_revenue.getText().equals("") 
+					|| textField_expenses.getText().equals("")
+					|| textField_accountsPayable.getText().equals("") 
+					|| textField_tax.getText().equals("")) {
+						tabbedPane.setSelectedIndex(1);
 						throw new NullPointerException("Missing value in input field");
+					}
+					else if (Integer.parseInt(textField_revenue.getText()) < 0 
+					|| Integer.parseInt(textField_expenses.getText()) < 0
+					|| Integer.parseInt(textField_accountsPayable.getText()) < 0
+					|| Integer.parseInt(textField_tax.getText()) < 0) {
+						throw new ArithmeticException("Caution: negative value in input field");
 					}
 				}
 				buttonPressed(btnDescription);
@@ -323,25 +362,34 @@ public class TreasurerUI extends JFrame{
 		}
 	}
 
-	private void buttonPressed(String btnDescription) {
+	private void buttonPressed(String btnDescription) throws Exception {
 		if (btnDescription.equals("btnOutputIncomeStatement")) {
 			outputIncomeStatement();
 		}
-		else if (btnDescription.equals("btnSave")) {
+		else if (btnDescription.equals("btnSave") || btnDescription.equals("fmbtnSaveIncomeStatement")) {
 			saveIncomeStatement();
 		}
 		else if (btnDescription.equals("btnSend")) {
 			System.out.println("btnSend");
 		}
+		else if (btnDescription.equals("fmbtnNewIncomeStatement")) {
+			tabbedPane.setSelectedIndex(1);
+		}
+		else if (btnDescription.equals("fmbtnOpenIncomeStatement")) {
+			openIncomeStatement();
+		}
 	}
 	
 	private void outputIncomeStatement() {
-		int	expenses =  Integer.parseInt(textField_expenses.getText());
 		int revenue = Integer.parseInt(textField_revenue.getText());
+		
+		int	expenses =  Integer.parseInt(textField_expenses.getText());
 		int accountsPayable = Integer.parseInt(textField_accountsPayable.getText());
 		int tax = Integer.parseInt(textField_tax.getText());
 		int liabilities = expenses + accountsPayable + tax;
+		
 		int netIncome = revenue - liabilities;
+		
 		date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		
@@ -362,24 +410,74 @@ public class TreasurerUI extends JFrame{
 	}
 	
 	private void saveIncomeStatement() {
-		DateFormat dateFormat = new SimpleDateFormat(" yyyy_MM_dd HH_mm_ss");
+		DateFormat dateFormat = new SimpleDateFormat(" yyyy_MM");
 		
 		File dir = new File("IncomeStatements");
 		File file = new File("IncomeStatements/LAFitnessIncomeStatement" + dateFormat.format(date) + ".txt");
 		
-		try {
-			if (incomeStatementTextArea.getText().equals("")) throw new IOException("Cannot save an empty file");
-			
+		try {			
 			dir.mkdir();
 			
 			PrintWriter output = new PrintWriter(file);
 			output.printf(incomeStatementTextArea.getText());
 			output.close();
 			
-			JOptionPane.showMessageDialog(null, "File saved");
+			JOptionPane.showMessageDialog(null, "saved: " + file);
 		}
 		catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e);
+		}
+	}
+	
+	@SuppressWarnings("resource")
+	private void openIncomeStatement() throws Exception {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new FileNameExtensionFilter("text file", "txt"));
+		fileChooser.setCurrentDirectory(new File ("IncomeStatements"));
+		
+		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			//get the file
+			java.io.File file = fileChooser.getSelectedFile();
+			//TODO----------------------------------------------------------------------------------------------------: check if file is actually income statement
+			//if (!file.toString().substring(0, 16).equals("IncomeStatement")) { throw new IOException("File is not an income statement file"); }
+			
+			// scanner for the file
+			Scanner scan = new Scanner(file);
+			if (!scan.next().equals("LAFitness")) { throw new IOException("File is not an income statement file"); }
+			
+			int counter = 0;
+			while(scan.hasNext()) {
+				if (scan.hasNextInt() && counter == 0) {
+					textField_revenue.setText(scan.next());
+					counter++;
+				}
+				else if (scan.hasNextInt() && counter == 2) {
+					textField_expenses.setText(scan.next());
+					counter++;
+				}
+				else if (scan.hasNextInt() && counter == 3) {
+					textField_accountsPayable.setText(scan.next());
+					counter++;
+				}
+				else if (scan.hasNextInt() && counter == 4) {
+					textField_tax.setText(scan.next());
+					counter++;
+				}
+				else if (scan.hasNextInt()) {
+					scan.next();
+					counter++;
+				}
+				else scan.next();
+			}
+			scan.close(); 
+			if (counter > 7) { throw new IOException("Error: Not an income statement"); }
+			else { 
+				tabbedPane.setSelectedIndex(1);
+				outputIncomeStatement();
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "No file was selected");
 		}
 	}
 }

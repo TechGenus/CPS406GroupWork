@@ -12,7 +12,7 @@ public class Main {
 		work.serialize(jill);
 		work.serialize(janak);
 		work.serialize(marco);
-		LoginInterface login = new LoginInterface();
-		CoachUI coach = new CoachUI(work.userGather());
+		//LoginInterface login = new LoginInterface();
+		TreasurerUI tui = new TreasurerUI("LAFitness", "Janak");
 	}
 }
