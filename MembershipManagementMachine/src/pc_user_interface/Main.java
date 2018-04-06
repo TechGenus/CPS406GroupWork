@@ -1,7 +1,5 @@
 package pc_user_interface;
 
-import java.io.File;
-import java.util.*;
 
 public class Main {
 	
@@ -15,5 +13,6 @@ public class Main {
 		work.serialize(janak);
 		work.serialize(marco);
 		LoginInterface login = new LoginInterface();
+		CustomerUI customer = new CustomerUI("Janak");
 	}
 }

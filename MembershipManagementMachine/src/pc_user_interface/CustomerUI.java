@@ -7,16 +7,13 @@ package pc_user_interface;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.border.CompoundBorder;
 
 public class CustomerUI extends JFrame{
 
-    private static final int FRAME_WIDTH = 300;
+    private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 400;
 
-    private JPanel pPayment;
     private JPanel pCredit;
     private JPanel pDebit;
 
@@ -48,7 +45,8 @@ public class CustomerUI extends JFrame{
     private JButton btnConfirm1;
     private JButton btnConfirm2;
 
-    private JPanel menuPanel;
+    private JPanel p;
+    private JPanel p2;
         
     private String lastNameGotten;
     private String firstNameGotten;
@@ -58,11 +56,17 @@ public class CustomerUI extends JFrame{
     private String securityCodeGotten;
     private String dcNumberGotten;
     private String verificationCodeGotten;
+    
+    private JLabel payingWithDebit;
+    private JLabel payingWithCredit;
+    private JLabel methods;
+    private JLabel currentUser;
 
     class PaymentListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
+        	p.removeAll();
             if(event.getSource() == btnCredit)
             {
                 validate();
@@ -96,110 +100,126 @@ public class CustomerUI extends JFrame{
         }
     }
 
-    public CustomerUI(){
-        menuPanel = new JPanel(new BorderLayout());
-        menuPanel.setPreferredSize(new Dimension(410, 400));
-        add(menuPanel);
-
+    public CustomerUI(String firstname){
+    	p = new JPanel(new BorderLayout());
+    	paymentListener = new PaymentListener();
+    	
+    	JPanel holder = new JPanel(new FlowLayout());
+    	JPanel topBar = new JPanel(new FlowLayout());
+    	currentUser = new JLabel("Current Customer is " + firstname);
+    	currentUser.setVisible(true);
+    	topBar.setBackground(Color.WHITE);
+    	topBar.add(currentUser);
+    	
+    	p.add(topBar, BorderLayout.NORTH);
+    	
+    	methods = new JLabel("                         Subscription Payment Methods                          ");
+    	methods.setVisible(true);
+    	holder.add(methods);
+     	btnCredit = new JButton("Credit");
+    	btnCredit.addActionListener(paymentListener);
+    	holder.add(btnCredit);
+    	btnDebit = new JButton("Debit");
+    	btnDebit.addActionListener(paymentListener);
+    	holder.add(btnDebit);
+    	
+    	p.add(holder, BorderLayout.CENTER);
+    	
+    	
+    	taNotification = new JTextArea();
+        taNotification.setEditable(false);
+        taNotification.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Notifications:"), taNotification.getBorder()));
+        
+        p.add(taNotification, BorderLayout.SOUTH);
+    	
+        this.add(p);
+        
         setTitle("Welcome");
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        setMinimumSize(new Dimension(410, 400));
+        setMinimumSize(new Dimension(400, 400));
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void pCredit()
+    {
+        p.setLayout(new BorderLayout());
+        JPanel pCreditConfrim = new JPanel(new BorderLayout());
+        pCredit = new JPanel(new GridLayout(6,2));
         
-        createPayMenu();
+        JPanel p1 = new JPanel();
+        JPanel p2 = new JPanel();
+        JPanel p3 = new JPanel();
+        JPanel p4 = new JPanel();
+        JPanel p5 = new JPanel();
+        JPanel p6 = new JPanel();
+
+        JPanel p7 = new JPanel();
+        JPanel p8 = new JPanel();
+        JPanel p9 = new JPanel();
+        JPanel p10 = new JPanel();
+        JPanel p11 = new JPanel();
+        JPanel p12 = new JPanel();
+
+        lblFirstName = new JLabel("First Name:");
+        p7.add(lblFirstName);
+        lblLastName = new JLabel("Last Name:");
+        p8.add(lblLastName);
+        lblPhoneNumber = new JLabel("Phone Number:");
+        p9.add(lblPhoneNumber);
+        lblAddress = new JLabel("Address:");
+        p10.add(lblAddress);
+        lblCreditNumber = new JLabel("Credit Card Number:");
+        p11.add(lblCreditNumber);
+        lblSecurityCode = new JLabel("Security Code:");
+        p12.add(lblSecurityCode);
+
+        tfFirstName = new JTextField(10);
+        p1.add(tfFirstName);
+        tfLastName = new JTextField(10);
+        p2.add(tfLastName);
+        tfPhoneNumber = new JTextField(10);
+        p3.add(tfPhoneNumber);
+        tfAddress = new JTextField(10);
+        p4.add(tfAddress);
+        tfCreditNumber = new JTextField(10);
+        p5.add(tfCreditNumber);
+        tfSecurityCode = new JTextField(10);
+        p6.add(tfSecurityCode);
+
+        pCredit.add(p7);
+        pCredit.add(p1);
+        pCredit.add(p8);
+        pCredit.add(p2);
+        pCredit.add(p9);
+        pCredit.add(p3);
+        pCredit.add(p10);
+        pCredit.add(p4);
+        pCredit.add(p11);
+        pCredit.add(p5);
+        pCredit.add(p12);
+        pCredit.add(p6);
+
+        JPanel pButton = new JPanel();
+        btnConfirm1 = new JButton("Confirm");
+        pButton.add(btnConfirm1);
+        confirmListener = new ConfirmListener();
+        btnConfirm1.addActionListener(confirmListener);
+        
+        JPanel holder = new JPanel();
+        payingWithCredit = new JLabel("Paying with Credit");
+        payingWithCredit.setVisible(true);
+        holder.add(payingWithCredit);
+        
+        pCreditConfrim.add(pCredit, BorderLayout.CENTER);
+        pCreditConfrim.add(holder,BorderLayout.NORTH);
+        pCreditConfrim.add(pButton, BorderLayout.SOUTH);
+
+        p.add(pCreditConfrim, BorderLayout.NORTH);
 
     }
-
-    public void createPayMenu(){
-        pPayment = new JPanel(new GridLayout(1,2));
-            paymentListener = new PaymentListener();
-            btnCredit = new JButton("Credit");
-                btnCredit.addActionListener(paymentListener);
-                pPayment.add(btnCredit);
-            btnDebit = new JButton("Debit");
-                btnDebit.addActionListener(paymentListener);
-                pPayment.add(btnDebit);
-            add(pPayment);
-    }
-
-    public void pCredit(){
-        pPayment.removeAll();
-            JPanel pCreditConfrim = new JPanel(new BorderLayout());
-                pCredit = new JPanel(new GridLayout(6,2));
-                    JPanel p1 = new JPanel();
-                    JPanel p2 = new JPanel();
-                    JPanel p3 = new JPanel();
-                    JPanel p4 = new JPanel();
-                    JPanel p5 = new JPanel();
-                    JPanel p6 = new JPanel();
-
-                    JPanel p7 = new JPanel();
-                    JPanel p8 = new JPanel();
-                    JPanel p9 = new JPanel();
-                    JPanel p10 = new JPanel();
-                    JPanel p11 = new JPanel();
-                    JPanel p12 = new JPanel();
-
-                    lblFirstName = new JLabel("First Name:");
-                        p7.add(lblFirstName);
-                    lblLastName = new JLabel("Last Name:");
-                        p8.add(lblLastName);
-                    lblPhoneNumber = new JLabel("Phone Number:");
-                        p9.add(lblPhoneNumber);
-                    lblAddress = new JLabel("Address:");
-                        p10.add(lblAddress);
-                    lblCreditNumber = new JLabel("Credit Card Number:");
-                        p11.add(lblCreditNumber);
-                    lblSecurityCode = new JLabel("Security Code:");
-                        p12.add(lblSecurityCode);
-
-                    tfFirstName = new JTextField(10);
-                        p1.add(tfFirstName);
-                    tfLastName = new JTextField(10);
-                        p2.add(tfLastName);
-                    tfPhoneNumber = new JTextField(10);
-                        p3.add(tfPhoneNumber);
-                    tfAddress = new JTextField(10);
-                        p4.add(tfAddress);
-                    tfCreditNumber = new JTextField(10);
-                        p5.add(tfCreditNumber);
-                    tfSecurityCode = new JTextField(10);
-                        p6.add(tfSecurityCode);
-
-                    pCredit.add(p7);
-                    pCredit.add(p1);
-                    pCredit.add(p8);
-                    pCredit.add(p2);
-                    pCredit.add(p9);
-                    pCredit.add(p3);
-                    pCredit.add(p10);
-                    pCredit.add(p4);
-                    pCredit.add(p11);
-                    pCredit.add(p5);
-                    pCredit.add(p12);
-                    pCredit.add(p6);
-
-                JPanel pButton = new JPanel();
-                    btnConfirm1 = new JButton("Confirm");
-                    pButton.add(btnConfirm1);
-                    confirmListener = new ConfirmListener();
-                    btnConfirm1.addActionListener(confirmListener);
-
-            pCreditConfrim.add(pCredit, BorderLayout.NORTH);
-            pCreditConfrim.add(pButton, BorderLayout.SOUTH);
-
-            taNotification = new JTextArea();
-                taNotification.setEditable(false);
-                taNotification.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Notifications:"), taNotification.getBorder()));
-
-
-        menuPanel.add(pCreditConfrim, BorderLayout.NORTH);
-        menuPanel.add(taNotification, BorderLayout.CENTER);
-
-    }
-    public void pDebit(){
-        pPayment.removeAll();
+    public void pDebit()
+    {
+           p.setLayout(new BorderLayout());
             JPanel pDebitConfrim = new JPanel(new BorderLayout());
                 pDebit = new JPanel(new GridLayout(6,2));
                     JPanel p1 = new JPanel();
@@ -261,16 +281,18 @@ public class CustomerUI extends JFrame{
                     confirmListener = new ConfirmListener();
                     btnConfirm2.addActionListener(confirmListener);
 
-            pDebitConfrim.add(pDebit, BorderLayout.NORTH);
+                    JPanel holder = new JPanel();
+                    payingWithDebit = new JLabel("Paying with Debit");
+                    payingWithDebit.setVisible(true);
+                    holder.add(payingWithDebit);
+                    
+            pDebitConfrim.add(holder, BorderLayout.NORTH);
+            pDebitConfrim.add(pDebit, BorderLayout.CENTER);
             pDebitConfrim.add(pButton, BorderLayout.SOUTH);
 
-            taNotification = new JTextArea();
-                taNotification.setEditable(false);
-                taNotification.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Notifications:"), taNotification.getBorder()));
 
 
-        menuPanel.add(pDebitConfrim, BorderLayout.NORTH);
-        menuPanel.add(taNotification, BorderLayout.CENTER);
+        p.add(pDebitConfrim, BorderLayout.NORTH);
 
     }
 

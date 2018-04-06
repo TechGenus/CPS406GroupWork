@@ -72,7 +72,7 @@ public class LoginInterface implements ActionListener
 			}
 			if(c.getUserFlag() == 2)
 			{
-				CustomerUI customerUI = new CustomerUI();
+				CustomerUI customerUI = new CustomerUI(c.getUserFirstName());
 				screen.setVisible(false);
 			}
 		}
