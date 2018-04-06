@@ -9,23 +9,27 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class CoachUI extends JFrame{
 	
 	private static final int FHEIGHT = 600;
 	private static final int FWIDTH = 800;
 	private static ArrayList<User> list;
+	private static Object[] list2;
 
 	private JPanel layout, sendMessages, nameInput;
 	private JSplitPane split;
 	private JButton send;
 	private JLabel name;
-	private JTextField text;
-	private JTextArea messageBox, memberList;
+	private JTextArea messageBox; 
+	private JList memberList;
 	private JScrollPane scrollV, memberScroll;
-
+	
 	public CoachUI(ArrayList<User> users)
 	{
 		list = users;
@@ -46,7 +50,7 @@ public class CoachUI extends JFrame{
 		
 		//nameInput panel stuff
 		name = new JLabel("Name");
-		text = new JTextField(20);
+
 		
 		//sendMessages panel stuff
 		messageBox = new JTextArea();
@@ -59,41 +63,36 @@ public class CoachUI extends JFrame{
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//obtaining name and message to send
-				String member = text.getText();
-				String message = messageBox.getText();
-				Iterator iterator = list.iterator();
-				
-				/*
-				for (int i = 0; i < list.size(); i++)
-				{
-					
-					if (((User)iterator.next()).getUserUsername() == member)
-					{
-						member.sendNotification(message);
-					}
-				}*/
-				messageBox.setText(messageBox.getText() + "\n\nMessage Sent to " + member);
+		
+				messageBox.setText(messageBox.getText() + "\n\nMessage Sent to ");
 			}
 		});
 		
+		class listListener implements ListSelectionListener
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if(e.getValueIsAdjusting() == false)
+				{
+					User hold = (User)e.getSource();
+					String name = hold.toString();
+				}
+			}
+		}
+		
 		//layout panel stuff
-		memberList = new JTextArea();
-		memberList.setFont(memberList.getFont().deriveFont(25f));
-		memberList.setEnabled(false);
+		list2 = list.toArray();
+		listListener userList = new listListener();
+		memberList = new JList(list2);
+		memberList.setFont(memberList.getFont().deriveFont(12f));
+		memberList.setEnabled(true);
+		memberList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		memberList.addListSelectionListener(userList);
 		memberScroll = new JScrollPane(memberList);
 		memberScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		Iterator iterator = list.iterator();
-		
-		for (int i = 0; i < list.size(); i++)
-		{
-			User temp = (User)iterator.next();
-			memberList.append(temp.getUserFirstName() + " " + temp.getUserLastName() + "\n");
-		}
 		
 		//adding panels
 		nameInput.add(name);
-		nameInput.add(text);
 		sendMessages.add(nameInput, BorderLayout.NORTH);
 		sendMessages.add(scrollV, BorderLayout.CENTER);
 		sendMessages.add(send, BorderLayout.SOUTH);

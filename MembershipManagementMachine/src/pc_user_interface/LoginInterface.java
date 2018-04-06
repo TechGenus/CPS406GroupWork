@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 public class LoginInterface implements ActionListener
 {
 	JTextField textField;
@@ -49,12 +48,7 @@ public class LoginInterface implements ActionListener
 		User c = null;
 		ArrayList<User> userList = new ArrayList<User>();
 		decryptor = new IOWork();
-		File folder = new File("Users");
-		File[] temp = folder.listFiles();
-		for(int i = 0;i < temp.length;i++)
-		{
-			userList.add((User)decryptor.deserialize(temp[i].getAbsolutePath()));
-		}
+		userList = decryptor.userGather();
 		String username = textField.getText();
 		String password = new String(textField2.getPassword());
 		c = (User)decryptor.deserialize("Users/" + username + ".ser");

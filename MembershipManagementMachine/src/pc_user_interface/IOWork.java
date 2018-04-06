@@ -1,10 +1,12 @@
 package pc_user_interface;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 public class IOWork 
 {
@@ -37,5 +39,16 @@ public class IOWork
 		{
 		
 		}
+	}
+	public ArrayList<User> userGather()
+	{
+		ArrayList<User> results = new ArrayList<User>();
+		File folder = new File("Users");
+		File[] temp = folder.listFiles();
+		for(int i = 0;i < temp.length;i++)
+		{
+			results.add((User)deserialize(temp[i].getAbsolutePath()));
+		}
+		return results;
 	}
 }

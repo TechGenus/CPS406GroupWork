@@ -97,6 +97,11 @@ public class User implements java.io.Serializable {
         }
 	}
 	
+	public String toString()
+	{
+		String holder = getUserFirstName()+ " " + getUserLastName();
+		return holder;
+	}
 	
 	public int getUserNumber() {
 		return userNumber;
