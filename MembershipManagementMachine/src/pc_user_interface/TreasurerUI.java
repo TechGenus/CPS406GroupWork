@@ -306,9 +306,7 @@ public class TreasurerUI extends JFrame{
 			this.btnDescription = description;
 		}
 		
-		@Override
 		public void actionPerformed(ActionEvent event) {
-			// TODO Auto-generated method stub
 			try {
 				if (btnDescription.equals("btnOutputIncomeStatement")) {
 					if (textField_revenue.getText().equals("") || textField_expenses.getText().equals("")
