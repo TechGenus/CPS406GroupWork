@@ -46,8 +46,7 @@ public class CustomerUI extends JFrame{
     private JButton btnConfirm2;
 
     private JPanel p;
-    private JPanel p2;
-        
+    
     private String lastNameGotten;
     private String firstNameGotten;
     private String addressGotten;
@@ -60,7 +59,7 @@ public class CustomerUI extends JFrame{
     private JLabel payingWithDebit;
     private JLabel payingWithCredit;
     private JLabel methods;
-    private JLabel currentUser;
+    private JLabel curUser;
 
     class PaymentListener implements ActionListener
     {
@@ -100,38 +99,35 @@ public class CustomerUI extends JFrame{
         }
     }
 
-    public CustomerUI(String firstname){
-    	p = new JPanel(new BorderLayout());
-    	paymentListener = new PaymentListener();
+    public CustomerUI(String firstname)
+    {
+    	p = new JPanel();
+    	p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+    	PaymentListener payment = new PaymentListener();
     	
-    	JPanel holder = new JPanel(new FlowLayout());
-    	JPanel topBar = new JPanel(new FlowLayout());
-    	currentUser = new JLabel("Current Customer is " + firstname);
-    	currentUser.setVisible(true);
+    	JPanel topBar = new JPanel();
+    	curUser = new JLabel("Current user is " + firstname);
+    	topBar.add(curUser);
     	topBar.setBackground(Color.WHITE);
-    	topBar.add(currentUser);
+    	p.add(topBar);
     	
-    	p.add(topBar, BorderLayout.NORTH);
+    	methods = new JLabel("Subscription Payment Options");
+    	p.add(methods);
     	
-    	methods = new JLabel("                         Subscription Payment Methods                          ");
-    	methods.setVisible(true);
-    	holder.add(methods);
-     	btnCredit = new JButton("Credit");
-    	btnCredit.addActionListener(paymentListener);
-    	holder.add(btnCredit);
+    	JPanel holder2 = new JPanel();
+    	btnCredit = new JButton("Credit");
+    	btnCredit.addActionListener(payment);
+    	holder2.add(btnCredit);
     	btnDebit = new JButton("Debit");
-    	btnDebit.addActionListener(paymentListener);
-    	holder.add(btnDebit);
-    	
-    	p.add(holder, BorderLayout.CENTER);
-    	
+    	btnDebit.addActionListener(payment);
+    	holder2.add(btnDebit);
+    	p.add(holder2);
     	
     	taNotification = new JTextArea();
         taNotification.setEditable(false);
         taNotification.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Notifications:"), taNotification.getBorder()));
+        p.add(taNotification);
         
-        p.add(taNotification, BorderLayout.SOUTH);
-    	
         this.add(p);
         
         setTitle("Welcome");

@@ -13,6 +13,5 @@ public class Main {
 		work.serialize(janak);
 		work.serialize(marco);
 		LoginInterface login = new LoginInterface();
-		CustomerUI customer = new CustomerUI("Janak");
 	}
 }
