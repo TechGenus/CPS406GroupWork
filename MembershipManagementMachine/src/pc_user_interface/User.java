@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class User implements java.io.Serializable {
 
-	private int userNumber;           // The users Phone Number
+	private String userNumber;           // The users Phone Number
 	private String userAddress;       // The users address
 	private String userFirstName;     // The users First name
 	private String userLastName;      // The users Last Name
@@ -22,7 +22,7 @@ public class User implements java.io.Serializable {
 	
 	
 	// Customer constructor below
-	public User (String firstName, String lastName, String address, int cn, String usrname, String pssword) 
+	public User (String firstName, String lastName, String address, String cn, String usrname, String pssword) 
 	   {
 	      // set instance variables
 		  this.userFirstName = firstName;
@@ -103,7 +103,7 @@ public class User implements java.io.Serializable {
 		return holder;
 	}
 	
-	public int getUserNumber() {
+	public String getUserNumber() {
 		return userNumber;
 	}
 	public String getUserAddress(){
@@ -153,7 +153,7 @@ public class User implements java.io.Serializable {
 	public void setUserLastName(String userLastName){
 		this.userLastName = userLastName;
 	}
-	public void setUserNumber(int userNumber) {
+	public void setUserNumber(String userNumber) {
 		this.userNumber = userNumber;
 	}
 	public void setUserAddress(String userAddress){
