@@ -61,11 +61,11 @@ public class TreasurerUI extends JFrame{
 	private JButton			btnAdd10PercentDiscount, btnAdd10PercentPenalty, btnAddNewCustomer, btnAddNewCoach,
 							btnAddNewTreasurer, btnRemoveSelectedAccount;
 	private JTextArea		selectedAccountInfoTextArea;
-	private JTextField		textField_customerUserName, textField_customerFirstName, textField_customerLastName, 
-							textField_customerAddress, textField_customerPhoneNumber1, textField_customerPhoneNumber2,
-							textField_customerPhoneNumber3, textField_coachUserName, textField_coachFirstName,
-							textField_coachLastName, textField_coachSalary, textField_treasurerUserName,
-							textField_treasurerFirstName, textField_treasurerLastName;
+	private JTextField		textField_customerUserName, 	textField_customerFirstName, 	textField_customerLastName, 
+							textField_customerAddress, 		textField_customerPhoneNumber1, textField_customerPhoneNumber2,
+							textField_customerPhoneNumber3, textField_coachUserName, 		textField_coachFirstName,
+							textField_coachLastName, 		textField_coachSalary, 			textField_treasurerUserName,
+							textField_treasurerFirstName, 	textField_treasurerLastName;
 	private JPasswordField	passwordField_customerPassword;
 	
 	public TreasurerUI(String frameTitle, String userName) {
@@ -113,8 +113,6 @@ public class TreasurerUI extends JFrame{
 		accountsScrollPane = 		new JScrollPane(accountsList);
 		accountsSortingPanel = 		new JPanel();
 		
-		accountsList.add(new JLabel("Hello"));
-		
 		accountsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		accountsScrollPane.setColumnHeaderView(accountsSortingPanel);
 		
@@ -122,6 +120,10 @@ public class TreasurerUI extends JFrame{
 		accountsTab.add(accountsOptionsTabbedPane());
 		
 		return accountsTab;
+	}
+	
+	private void accountsList() {
+		
 	}
 	
 	private JTabbedPane accountsOptionsTabbedPane() {
@@ -473,6 +475,11 @@ public class TreasurerUI extends JFrame{
 			if (e.getValueIsAdjusting() == false) {
 				ListModel hold = accountsList.getModel(); 
 				selectedUser = ((User) (hold.getElementAt(accountsList.getSelectedIndex())));
+				selectedAccountInfoTextArea.setText("User name: " + selectedUser.getUserUsername() + "\r\n"
+													+ "First name: " + selectedUser.getUserFirstName() + "\r\n"
+													+ "Last name: " + selectedUser.getUserLastName() + "\r\n" 
+													+ "Address: " + selectedUser.getUserAddress() + "\r\n" 
+													+ "Phone Number: " + selectedUser.getUserNumber() + "\r\n");
 			}
 		}
 	}
@@ -527,30 +534,38 @@ public class TreasurerUI extends JFrame{
 			openIncomeStatement();
 		}
 		else if (btnDescription.equals("btnAddNewCustomer")) {
-			ArrayList<User> userList = ioWork.userGather();
-			for (int i = 0; i < userList.size(); i++) {
-				if (userList.get(i).getUserUsername().equals(textField_customerUserName.getText())) {
-					throw new IOException("Error: User already exists");
-				}
-			}
-			
-			String cellPhoneNum = 	textField_customerPhoneNumber1.getText() + 
-									textField_customerPhoneNumber2.getText() + 
-									textField_customerPhoneNumber3.getText();
-			
-			User newCustomer = new User(textField_customerFirstName.getText(), 
-										textField_customerLastName.getText(),
-										textField_customerAddress.getText(),
-										cellPhoneNum,
-										textField_customerUserName.getText(),
-										passwordField_customerPassword.getPassword().toString());
-			
-			ioWork.serialize(newCustomer);
-			JOptionPane.showMessageDialog(null, "Added new user");
+			addNewCustomer();
+		}
+		else if (btnDescription.equals("btnAddNewCoach")) {
+			addNewCustomer();
 		}
 		else if (btnDescription.equals("btnRemoveSelectedAccount")) {
 			
 		}
+	}
+	
+	private void addNewCustomer() throws IOException {
+		ArrayList<User> userList = ioWork.userGather();
+		for (int i = 0; i < userList.size(); i++) {
+			if (userList.get(i).getUserUsername().equals(textField_customerUserName.getText())) {
+				throw new IOException("Error: User already exists");
+			}
+		}
+		
+		String cellPhoneNum = 	textField_customerPhoneNumber1.getText() + 
+								textField_customerPhoneNumber2.getText() + 
+								textField_customerPhoneNumber3.getText();
+		
+		User newCustomer = new User(textField_customerFirstName.getText(), 
+									textField_customerLastName.getText(),
+									textField_customerAddress.getText(),
+									cellPhoneNum,
+									textField_customerUserName.getText(),
+									passwordField_customerPassword.getPassword().toString());
+		
+		newCustomer.addMessage("Confirm payment and information");
+		ioWork.serialize(newCustomer);
+		JOptionPane.showMessageDialog(null, "Added new user");
 	}
 	
 	private void removeSelectedAccountFile() {
