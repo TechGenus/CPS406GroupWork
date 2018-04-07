@@ -41,7 +41,7 @@ public class TreasurerUI extends JFrame{
 	private JMenuBar 		accountsMenuBar;
 	private JMenu			fileMenu, menuIncomeStatement, menuCustomerFile, helpMenu;
 	private JMenuItem		fmbtnNewIncomeStatement, fmbtnOpenIncomeStatement, fmbtnSaveIncomeStatement, 
-							fmbtnExit, fmbtnNewCustomerFile, about, documentation;
+							fmbtnExit, fmbtnNewCustomerFile, fmOpenReadMe;
 	
 	private JTabbedPane		tabbedPane;
 	
@@ -66,7 +66,7 @@ public class TreasurerUI extends JFrame{
 							textField_customerPhoneNumber3, textField_coachUserName, 		textField_coachFirstName,
 							textField_coachLastName, 		textField_coachSalary, 			textField_treasurerUserName,
 							textField_treasurerFirstName, 	textField_treasurerLastName;
-	private JPasswordField	passwordField_customerPassword;
+	private JPasswordField	passwordField_customerPassword, passwordField_coachPassword,	passwordField_treasurerPassword;
 	
 	public TreasurerUI(String frameTitle, String userName) {
 		setTitle(frameTitle);
@@ -110,6 +110,7 @@ public class TreasurerUI extends JFrame{
 		accountsList = 				new JList(usersList.toArray());
 		accountsList.setEnabled(true);
 		accountsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		accountsList.addListSelectionListener(listListener);
 		accountsScrollPane = 		new JScrollPane(accountsList);
 		accountsSortingPanel = 		new JPanel();
 		
@@ -247,7 +248,7 @@ public class TreasurerUI extends JFrame{
 		JPanel p11 = new JPanel();
 		JLabel lblCoachPassword = new JLabel("password");
 		p11.add(lblCoachPassword);
-		JPasswordField passwordField_coachPassword = new JPasswordField(14);
+		passwordField_coachPassword = new JPasswordField(14);
 		p11.add(passwordField_coachPassword);
 		addAndRemoveAccountsTab.add(p11);
 		
@@ -290,7 +291,7 @@ public class TreasurerUI extends JFrame{
 		JPanel p18 = new JPanel();
 		JLabel lblTreasurerPassword = new JLabel("password");
 		p18.add(lblTreasurerPassword);
-		JPasswordField passwordField_treasurerPassword = new JPasswordField(14);
+		passwordField_treasurerPassword = new JPasswordField(14);
 		p18.add(passwordField_treasurerPassword);
 		addAndRemoveAccountsTab.add(p18);
 		
@@ -461,11 +462,10 @@ public class TreasurerUI extends JFrame{
 	private JMenu helpMenu() {
 		helpMenu = new JMenu("Help");
 		
-		about = 			new JMenuItem("about");
-		documentation = 	new JMenuItem("open documentation");
-		
-		helpMenu.add(about);
-		helpMenu.add(documentation);
+		fmOpenReadMe = new JMenuItem("open ReadMe.txt");
+		listener = new ButtonListener("fmOpenReadMe");
+		fmOpenReadMe.addActionListener(listener);
+		helpMenu.add(fmOpenReadMe);
 		
 		return helpMenu;
 	}
@@ -474,7 +474,8 @@ public class TreasurerUI extends JFrame{
 		public void valueChanged(ListSelectionEvent e) {
 			if (e.getValueIsAdjusting() == false) {
 				ListModel hold = accountsList.getModel(); 
-				selectedUser = ((User) (hold.getElementAt(accountsList.getSelectedIndex())));
+				selectedUser = ((User) hold.getElementAt(accountsList.getSelectedIndex()));
+				System.out.println(((User) hold.getElementAt(accountsList.getSelectedIndex())).toString());
 				selectedAccountInfoTextArea.setText("User name: " + selectedUser.getUserUsername() + "\r\n"
 													+ "First name: " + selectedUser.getUserFirstName() + "\r\n"
 													+ "Last name: " + selectedUser.getUserLastName() + "\r\n" 
@@ -533,14 +534,22 @@ public class TreasurerUI extends JFrame{
 		else if (btnDescription.equals("fmbtnOpenIncomeStatement")) {
 			openIncomeStatement();
 		}
+		else if (btnDescription.equals("fmbtnNewCustomerFile")) {
+			tabbedPane.setSelectedIndex(0);
+			accountsOptionsTabbedPane.setSelectedIndex(1);
+		}
+		else if (btnDescription.equals("fmOpenReadMe")) {
+			ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "ReadMe.txt");
+			pb.start();
+		}
 		else if (btnDescription.equals("btnAddNewCustomer")) {
 			addNewCustomer();
 		}
 		else if (btnDescription.equals("btnAddNewCoach")) {
-			addNewCustomer();
+			addNewCoach();
 		}
-		else if (btnDescription.equals("btnRemoveSelectedAccount")) {
-			
+		else if (btnDescription.equals("btnAddNewTreasurer")) {
+			addNewTreasurer();
 		}
 	}
 	
@@ -568,8 +577,37 @@ public class TreasurerUI extends JFrame{
 		JOptionPane.showMessageDialog(null, "Added new user");
 	}
 	
-	private void removeSelectedAccountFile() {
-		// todo:--------------------------------------------------------------------------------------------------make JList FIrst
+	private void addNewCoach() throws IOException {
+		ArrayList<User> userList = ioWork.userGather();
+		for (int i = 0; i < userList.size(); i++) {
+			if (userList.get(i).getUserUsername().equals(textField_customerUserName.getText())) {
+				throw new IOException("Error: User already exists");
+			}
+		}
+		
+		User newCoach = new User(textField_coachFirstName.getText(), 
+									textField_coachLastName.getText(),
+									textField_coachUserName.getText(),
+									passwordField_coachPassword.getPassword().toString(),
+									Integer.parseInt(textField_coachSalary.getText()));
+		ioWork.serialize(newCoach);
+		JOptionPane.showMessageDialog(null, "Added new user");
+	}
+	
+	private void addNewTreasurer() throws IOException {
+		ArrayList<User> userList = ioWork.userGather();
+		for (int i = 0; i < userList.size(); i++) {
+			if (userList.get(i).getUserUsername().equals(textField_customerUserName.getText())) {
+				throw new IOException("Error: User already exists");
+			}
+		}
+		
+		User newTreasurer = new User(textField_coachFirstName.getText(), 
+									textField_coachLastName.getText(),
+									textField_coachUserName.getText(),
+									passwordField_coachPassword.getPassword().toString());
+		ioWork.serialize(newTreasurer);
+		JOptionPane.showMessageDialog(null, "Added new user");
 	}
 	
 	private void outputIncomeStatement() {
@@ -628,12 +666,8 @@ public class TreasurerUI extends JFrame{
 		fileChooser.setCurrentDirectory(new File ("IncomeStatements"));
 		
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			//get the file
 			java.io.File file = fileChooser.getSelectedFile();
-			//TODO----------------------------------------------------------------------------------------------------: check if file is actually income statement
-			//if (!file.toString().substring(0, 16).equals("IncomeStatement")) { throw new IOException("File is not an income statement file"); }
 			
-			// scanner for the file
 			Scanner scan = new Scanner(file);
 			if (!scan.next().equals("LAFitness")) { throw new IOException("File is not an income statement file"); }
 			
