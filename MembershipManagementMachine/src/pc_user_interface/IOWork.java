@@ -51,4 +51,28 @@ public class IOWork
 		}
 		return results;
 	}
+	//Sort missed payments by greatest to least
+	public ArrayList<User> paymentsSort(ArrayList<User> holder)
+	{
+		ArrayList<User> results = holder;
+		for(int i = 0;i < results.size();i++)
+		{
+			if(results.get(i).getUserFlag() != 2)
+			{
+				results.remove(i);
+			}
+		}
+		for(int i = 0;i < results.size();i++)
+		{
+			for(int f = 0;f < results.size();f++)
+			{
+				if(results.get(i).getUserMissedPayments() < results.get(f).getUserMissedPayments())
+				{
+					
+				}
+			}
+		}
+		return results;
+	}
+	//Sort attended classes by greatest to least
 }

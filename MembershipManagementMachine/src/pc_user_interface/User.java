@@ -18,7 +18,8 @@ public class User implements java.io.Serializable {
 	private int salary;
 	private String notifications;         // string that consists of all messages from coach
 	private int userFlag;
-	
+	private Boolean discount;
+	private Boolean penalty;
 	
 	
 	// Customer constructor below
@@ -37,6 +38,8 @@ public class User implements java.io.Serializable {
 		  this.attendedClasses = 0;
 		  this.userFlag = 2;
 		  this.notifications = "";
+		  this.discount = false;
+		  this.penalty = false;
 		  
 		  // print notifications on user GUI (inside a textbox on GUI )
 	   }
