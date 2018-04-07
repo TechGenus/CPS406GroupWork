@@ -106,6 +106,14 @@ public class User implements java.io.Serializable {
 		return holder;
 	}
 	
+	public Boolean getPenalty()
+	{
+		return penalty;
+	}
+	public Boolean getDiscount()
+	{
+		return discount;
+	}
 	public String getUserNumber() {
 		return userNumber;
 	}
@@ -149,7 +157,14 @@ public class User implements java.io.Serializable {
 		return this.notifications;
 	}
 	
-	
+	public void setPenalty(Boolean in)
+	{
+		this.penalty = in;
+	}
+	public void setDiscount(Boolean in)
+	{
+		this.discount = in;
+	}
 	public void setUserFirstName(String userFirstName){
 		this.userFirstName = userFirstName;
 	}
