@@ -1,5 +1,3 @@
-package pc_user_interface;
-
 import static org.junit.Assert.*;
 
 import org.junit.After;

@@ -1,5 +1,3 @@
-package pc_user_interface;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
