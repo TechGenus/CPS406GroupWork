@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 public class IOWork 
 {
+	/**
+	 * Method to take a serialized User file and turn it into an object
+	 * */
 	public Object deserialize(String fileName)
 	{
 		Object c = null;
@@ -25,6 +28,9 @@ public class IOWork
 		catch(ClassNotFoundException e) {}
 		return c;
 	}
+	/**
+	 * Method to take a User object and turn it into a serialized file
+	 * */
 	public void serialize(User o)
 	{
 		try
@@ -40,6 +46,9 @@ public class IOWork
 		
 		}
 	}
+	/**
+	 * Method which gathers all of the users from the User folder and puts them into an ArrayList
+	 * */
 	public ArrayList<User> userGather()
 	{
 		ArrayList<User> results = new ArrayList<User>();
@@ -51,7 +60,9 @@ public class IOWork
 		}
 		return results;
 	}
-	//Sort missed payments by greatest to least
+	/**
+	 * Method which sorts missed payments by greatest to least
+	 * */
 	public ArrayList<User> paymentsSort(ArrayList<User> holder)
 	{
 		ArrayList<User> results = holder;
@@ -76,7 +87,9 @@ public class IOWork
 		}
 		return results;
 	}
-	//Sort attended classes by greatest to least
+	/**
+	 * Method which sorts attended classes by greatest to least
+	 * */
 	public ArrayList<User> attendedSort(ArrayList<User> holder)
 	{
 		ArrayList<User> results = holder;

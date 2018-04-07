@@ -6,10 +6,12 @@ import java.io.File;
 import java.util.ArrayList;
 public class LoginInterface implements ActionListener
 {
+	/**Making some of the interface components*/
 	JTextField textField;
 	JPasswordField textField2;
 	IOWork decryptor;
 	JFrame screen;
+	/**Method sets up JFrame*/
 	public LoginInterface()
 	{
 		screen = new JFrame();
@@ -23,6 +25,7 @@ public class LoginInterface implements ActionListener
 		screen.add(page);
 		partsAdding(page,screen);
 	}
+	/**Method adds on all of the login interface parts*/
 	public void partsAdding(JPanel page, JFrame screen)
 	{
 		String[] labels = {"Username:","Password:"};
@@ -44,6 +47,7 @@ public class LoginInterface implements ActionListener
 		page.add(login);
 		screen.setVisible(true);
 	}
+	/**Action Listener which runs when the login button is pressed*/
 	public void actionPerformed(ActionEvent e)
 	{
 		User c = null;
@@ -53,6 +57,7 @@ public class LoginInterface implements ActionListener
 		String username = textField.getText();
 		String password = new String(textField2.getPassword());
 		c = (User)decryptor.deserialize("Users/" + username + ".ser");
+		//Runs if the User information lead to a user on file and not if there is none
 		if(c != null)
 		{
 			if(c.getUserFlag() == 0)

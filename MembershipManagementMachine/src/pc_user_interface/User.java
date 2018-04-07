@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class User implements java.io.Serializable {
-
+	/**
+	 * Declarations to create most of the Swing Objects
+	 * */
 	private String userNumber;           // The users Phone Number
 	private String userAddress;       // The users address
 	private String userFirstName;     // The users First name
@@ -22,7 +24,9 @@ public class User implements java.io.Serializable {
 	private Boolean penalty;
 	
 	
-	// Customer constructor below
+	/**
+	 * Customer constructor below
+	 * */
 	public User (String firstName, String lastName, String address, String cn, String usrname, String pssword) 
 	   {
 	      // set instance variables
@@ -43,7 +47,9 @@ public class User implements java.io.Serializable {
 		  
 		  // print notifications on user GUI (inside a textbox on GUI )
 	   }
-	//Coach constructor below
+	/**
+	 * Coach constructor below
+	 * */
 	public User (String fname, String lname, String usrname, String pssword, int Salary)
 	{
 		this.userFirstName = fname;
@@ -53,7 +59,9 @@ public class User implements java.io.Serializable {
 		this.salary = Salary;
 		this.userFlag = 1;
 	}
-	//Treasurer constructor below
+	/**
+	 * Treasurer constructor below
+	 * */
 	public User(String firstName, String lastName, String usrname, String pssword)
 	{
 		this.userFirstName = firstName;
@@ -62,12 +70,16 @@ public class User implements java.io.Serializable {
 		this.password = pssword;
 		this.userFlag = 0;
 	}
-	// user METHODS
+	/**
+	 * Method which adds a message to the user
+	 * */
 	public void addMessage(String message)
 	{
 		this.notifications += message + "\r\n";
 	}
-	
+	/**
+	 * Method which checks for payment
+	 */
 	public void pay()
 	{
 		if(this.hasPaid == true){
@@ -78,7 +90,9 @@ public class User implements java.io.Serializable {
 		}
 	}
 	
-	// COACH METHODS
+	/**
+	 * Method to send messages to all the users
+	 * */
 	public void sendMessage(String message, String usrname, ArrayList<User> users)
 	{
         for (int counter = 0; counter < users.size(); counter++) {
@@ -89,7 +103,9 @@ public class User implements java.io.Serializable {
             }
         }
 	}
-	
+	/**
+	 * Method to send a notification to all users
+	 * */
 	public void sendNotification(String message, ArrayList<User> users)
 	{
         for (int counter = 0; counter < users.size(); counter++) { 	
@@ -99,13 +115,17 @@ public class User implements java.io.Serializable {
         	}
         }
 	}
-	
+	/**
+	 * Method to convert the User object to a string
+	 * */
 	public String toString()
 	{
 		String holder = getUserFirstName()+ " " + getUserLastName();
 		return holder;
 	}
-	
+	/**
+	 * Methods to get all of the class variables
+	 * */
 	public Boolean getPenalty()
 	{
 		return penalty;
@@ -156,7 +176,9 @@ public class User implements java.io.Serializable {
 	{
 		return this.notifications;
 	}
-	
+	/**
+	 * Methods to change all of the class variables
+	 * */
 	public void setPenalty(Boolean in)
 	{
 		this.penalty = in;

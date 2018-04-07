@@ -13,7 +13,8 @@ import javax.swing.border.CompoundBorder;
 import java.util.Random;
 
 public class CustomerUI extends JFrame{
-
+	/**
+	 * Declarations for most of the swing components*/
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 400;
 
@@ -70,7 +71,9 @@ public class CustomerUI extends JFrame{
     private JLabel payingWithCredit;
     private JLabel methods;
     private JLabel curUser;
-
+    /**
+     * Action Listener which opens the payments pages
+     * */
     class PaymentListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -94,6 +97,9 @@ public class CustomerUI extends JFrame{
             }
         }
     }
+    /**
+     * Action Listener which runs the payment into retrieval methods
+     * */
     class ConfirmListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event) 
@@ -108,7 +114,9 @@ public class CustomerUI extends JFrame{
             }
         }
     }
-
+    /**
+     * Constructor for the Customer class which takes a user
+     * */
     public CustomerUI(User u)
     {
     	p = new JPanel();
@@ -149,7 +157,9 @@ public class CustomerUI extends JFrame{
         setResizable(false);
 		setVisible(true);
     }
-
+    /**
+     * Method which creates the credit payment page
+     * */
     public void pCredit()
     {
         p.setLayout(new BorderLayout());
@@ -234,6 +244,9 @@ public class CustomerUI extends JFrame{
         p.add(pCreditConfrim, BorderLayout.NORTH);
 
     }
+    /**
+     * Method which creates the debit payment page
+     * */
     public void pDebit()
     {
            p.setLayout(new BorderLayout());
@@ -317,7 +330,9 @@ public class CustomerUI extends JFrame{
         p.add(pDebitConfrim, BorderLayout.NORTH);
 
     }
-
+    /**
+     * Method which processes the debit payment data
+     * */
     public void getInfoPayD(){
         firstNameGotten = tfFirstName.getText();
         lastNameGotten = tfLastName.getText();
@@ -332,6 +347,9 @@ public class CustomerUI extends JFrame{
         else if(isLetter(firstNameGotten) != true || isLetter(lastNameGotten) != true || isNum(phoneNumberGotten) != true || isNum(dcNumberGotten) != true || isNum(verificationCodeGotten) != true)
         {
         	stateBox.setText("Payment information is the wrong format in one of the fields. ");
+        } else if(user.getUserHasPaid() == true)
+        {
+        	stateBox.setText("Payment has already been made for the month.");
         }
         else
         {
@@ -342,7 +360,9 @@ public class CustomerUI extends JFrame{
             wrk.serialize(user);
         }
     }
-
+    /**
+     * Method which processes the credit card payment data
+     * */
     public void getInfoPayC(){
         firstNameGotten = tfFirstName.getText();
         lastNameGotten = tfLastName.getText();
@@ -358,7 +378,11 @@ public class CustomerUI extends JFrame{
         {
         	stateBox.setText("Payment information is the wrong format in one of the fields. ");
         }
-        else
+        else if(user.getUserHasPaid() == true)
+        {
+        	stateBox.setText("Payment has already been made for the month.");
+        }
+        else 
         {
             user.setMissedPayments(r.nextInt(5) + 1);
             user.setAttendedClasses(r.nextInt(5) + 1);

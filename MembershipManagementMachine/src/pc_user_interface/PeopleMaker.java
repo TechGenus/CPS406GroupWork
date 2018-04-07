@@ -3,6 +3,9 @@ import java.util.Random;
 
 public class PeopleMaker 
 {
+	/**
+	 * Main method which allows for new user files to be created
+	 * */
 	public static void main(String args[])
 	{
 		Random r = new Random();

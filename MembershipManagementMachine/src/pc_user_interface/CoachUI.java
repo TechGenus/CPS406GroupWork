@@ -16,7 +16,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class CoachUI extends JFrame{
-	
+	/**
+	 * Declarations for most of the swing components
+	 * */
 	private static final int FHEIGHT = 600;
 	private static final int FWIDTH = 800;
 	private static ArrayList<User> list;
@@ -33,18 +35,24 @@ public class CoachUI extends JFrame{
 	private String loginName = "";
 	
 	private IOWork work = new IOWork();
-	
+	/**
+	 * Constructor for CoachUI
+	 * */
 	public CoachUI(ArrayList<User> users)
 	{
 		list = users;
 		constructUI();
 	} 
-	
+	/**
+	 * Method which does all of the Component setup for the CoachUI
+	 * */
 	private void constructUI()
 	{
 		setSize(FWIDTH, FHEIGHT);
 		
-		//panels
+		/**
+		 * panels
+		 * */
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layout = new JPanel(new GridLayout(1,2));
 		sendMessages = new JPanel(new BorderLayout());
@@ -53,11 +61,15 @@ public class CoachUI extends JFrame{
 		split.setDividerLocation(2*FWIDTH / 3);
 		split.setEnabled(false);
 		
-		//nameInput panel stuff
+		/**
+		 * nameInput panel stuff
+		 * */
 		name = new JLabel("Name: ");
 
 		
-		//sendMessages panel stuff
+		/**
+		 * sendMessages panel stuff
+		 * */
 		messageBox = new JTextArea();
 		messageBox.setLineWrap(true);
 		messageBox.setWrapStyleWord(true);
@@ -93,7 +105,9 @@ public class CoachUI extends JFrame{
 			}
 		}
 		
-		//layout panel stuff
+		/**
+		 * layout panel stuff
+		 * */
 		list2 = list.toArray();
 		ListListener userList = new ListListener();
 		memberList = new JList(list2);
@@ -104,7 +118,9 @@ public class CoachUI extends JFrame{
 		memberScroll = new JScrollPane(memberList);
 		memberScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		//adding panels
+		/**
+		 * adding panels
+		 * */
 		nameInput.add(name);
 		sendMessages.add(nameInput, BorderLayout.NORTH);
 		sendMessages.add(scrollV, BorderLayout.CENTER);
