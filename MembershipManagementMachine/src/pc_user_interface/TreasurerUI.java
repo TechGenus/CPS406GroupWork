@@ -22,7 +22,7 @@ import java.awt.event.ItemListener;
 
 public class TreasurerUI extends JFrame{
 	private int				frameWidth 	= 800;
-	private int				frameHeight = 600;
+	private int				frameHeight = 700;
 	
 	private String			userName;
 	private Date			date;
@@ -47,9 +47,12 @@ public class TreasurerUI extends JFrame{
 	private JButton 		btnOutputIncomeStatement, btnSave;
 	
 	private JSplitPane		accountsTab;
-	private JPanel			customerSortingPanel;
-	private JList 			customerList;
-	private JScrollPane 	customerScrollPane;
+	private JPanel			accountsSortingPanel, editAccountsTab, addAndRemoveAccountsTab;
+	private JList 			accountsList;
+	private JScrollPane 	accountsScrollPane;
+	private JTabbedPane		accountsOptionsTabbedPane;
+	private JButton			btnAdd10PercentDiscount, btnAdd10PercentPenalty, btnAddNewCustomer, btnAddNewCoach,
+							btnAddNewTreasurer, btnRemoveSelectedAccount;
 	
 	public TreasurerUI(String frameTitle, String userName) {
 		setTitle(frameTitle);
@@ -64,15 +67,14 @@ public class TreasurerUI extends JFrame{
 	
 	private void fillFrame() {
 		setJMenuBar(accountsMenuBar());
-		getContentPane().add(introPanel(),	BorderLayout.NORTH);
+		getContentPane().add(headerPanel(),	BorderLayout.NORTH);
 		getContentPane().add(tabbedPane(),	BorderLayout.CENTER);
 	}
 	
 	private JTabbedPane tabbedPane() {
 		tabbedPane = new JTabbedPane();
 		
-		tabbedPane.addTab("Accounts", null, accountsTab(),	null);
-		
+		tabbedPane.addTab("Accounts", 				null, accountsTab(),			null);
 		tabbedPane.addTab("Income and Expenses",	null, incomeAndExpensesTab(),	null);
 		
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -86,96 +88,215 @@ public class TreasurerUI extends JFrame{
 	
 	private JSplitPane accountsTab() {
 		accountsTab = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		accountsTab.setDividerLocation(2 * frameWidth / 3);
+		accountsTab.setDividerLocation(5 * frameWidth / 8);
 		accountsTab.setEnabled(false);
 		
-		customerList = 				new JList<JLabel>();
-		customerScrollPane = 		new JScrollPane(customerList);
-		customerSortingPanel = 		new JPanel();
+		accountsList = 				new JList<JLabel>();
+		accountsScrollPane = 		new JScrollPane(accountsList);
+		accountsSortingPanel = 		new JPanel();
 		
-		customerList.add(new JLabel("Hello"));
+		accountsList.add(new JLabel("Hello"));
 		
-		customerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		customerScrollPane.setColumnHeaderView(customerSortingPanel);
+		accountsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		accountsScrollPane.setColumnHeaderView(accountsSortingPanel);
 		
-		accountsTab.add(customerScrollPane);
-		accountsTab.add(customerOptionsPanel());
+		accountsTab.add(accountsScrollPane);
+		accountsTab.add(accountsOptionsTabbedPane());
 		
 		return accountsTab;
 	}
 	
-	private JPanel customerOptionsPanel() {
-		JPanel customerOptionsPanel = new JPanel(new GridLayout());
+	private JTabbedPane accountsOptionsTabbedPane() {
+		accountsOptionsTabbedPane = new JTabbedPane();
+
 		
-		customerOptionsPanel.add(customerOptionsGrid(), BorderLayout.CENTER);
+		accountsOptionsTabbedPane.addTab("Edit Accounts",		null, editAccountsTab(),			null);
+		accountsOptionsTabbedPane.addTab("Add/Remove Accounts", null, addAndRemoveAccountsTab(),	null);
 		
+		accountsOptionsTabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+		accountsOptionsTabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 		
-		// Panel 2
-		JPanel p2 = new JPanel(new BorderLayout());
-		JButton btnRemoveSelectedAccount = new JButton("Remove selected account");
-		listener = new ButtonListener("btnRemoveSelectedAccount");
-		btnRemoveSelectedAccount.addActionListener(listener);
-		p2.add(btnRemoveSelectedAccount, BorderLayout.SOUTH);
+		// this line allows u to change the tab index to focus on what ever tab u want
+		accountsOptionsTabbedPane.setSelectedIndex(0);
 		
-		customerOptionsPanel.add(p2, BorderLayout.SOUTH);
-		
-		return customerOptionsPanel;
+		return accountsOptionsTabbedPane;
 	}
 	
-	private JPanel customerOptionsGrid() {
-		JPanel gridP1 = new JPanel(new GridLayout(18, 1));
+	private JPanel editAccountsTab() {
+		editAccountsTab = new JPanel(new GridLayout(2,1));
 		
-		JPanel gp1 = new JPanel();
-		// --------------------------------------------------------------finish this
-		gridP1.add(gp1);
+		JPanel p1 = new JPanel(new BorderLayout()); 
+		JLabel lblSelectedAccountInfo = new JLabel("Selected account information:");
+		p1.add(lblSelectedAccountInfo, BorderLayout.NORTH);
+		JTextArea selectedAccountInfoTextArea = new JTextArea();
+		p1.add(selectedAccountInfoTextArea, BorderLayout.CENTER);
+		editAccountsTab.add(p1);
 		
-		JPanel gp2 = new JPanel();
-		JLabel lblUserName =  new JLabel("user name");
-		gp2.add(lblUserName);
-		JTextField textField_userName = new JTextField(14);
-		gp2.add(textField_userName);
-		gridP1.add(gp2);
+		JPanel ButtonGrid = new JPanel(new GridLayout(2,1));
 		
-		JPanel gp3 = new JPanel();
-		JLabel lblUserPassword =  new JLabel("password");
-		gp3.add(lblUserPassword);
-		JPasswordField passwordField_userPassword = new JPasswordField(14);
-		gp3.add(passwordField_userPassword);
-		gridP1.add(gp3);
+		JPanel p2 = new JPanel(new GridBagLayout());
+		btnAdd10PercentDiscount = new JButton("Add 10% Discount to Selected Account");
+		listener = new ButtonListener("btnAdd10PercentDiscount");
+		btnAdd10PercentDiscount.addActionListener(listener);
+		p2.add(btnAdd10PercentDiscount);
+		editAccountsTab.add(p2);
 		
-		JPanel gp4 = new JPanel();
-		JLabel lblUserFirstName =  new JLabel("first name");
-		gp4.add(lblUserFirstName);
-		JTextField textField_userFirstName = new JTextField(14);
-		gp4.add(textField_userFirstName);
-		gridP1.add(gp4);
+		JPanel p3 = new JPanel(new GridBagLayout());
+		btnAdd10PercentPenalty = new JButton(" Add 10% Penalty to Selected Account ");
+		listener = new ButtonListener("btnAdd10PercentPenalty");
+		btnAdd10PercentPenalty.addActionListener(listener);
+		p3.add(btnAdd10PercentPenalty);
+		editAccountsTab.add(p3);
 		
-		JPanel gp5 = new JPanel();
-		JLabel lblUserLastName =  new JLabel("last name");
-		gp5.add(lblUserLastName);
-		JTextField textField_userLastName = new JTextField(14);
-		gp5.add(textField_userLastName);
-		gridP1.add(gp5);
+		ButtonGrid.add(p2);
+		ButtonGrid.add(p3);
+		editAccountsTab.add(ButtonGrid);
 		
-		JPanel gp6 = new JPanel();
-		JLabel lblUserAddress =  new JLabel("address");
-		gp6.add(lblUserAddress);
-		JTextField textField_userAddress = new JTextField(15);
-		gp6.add(textField_userAddress);
-		gridP1.add(gp6);
+		return editAccountsTab;
+	}
+	
+	private JPanel addAndRemoveAccountsTab() {
+		addAndRemoveAccountsTab = new JPanel(new GridLayout(22, 1));
 		
-		JPanel gp7 = new JPanel();
-		JLabel lblUserPhoneNumber =  new JLabel("phone number");
-		gp7.add(lblUserPhoneNumber);
-		JTextField textField_userPhoneNumber1 = new JTextField(3);
-		gp7.add(textField_userPhoneNumber1);
-		JTextField textField_userPhoneNumber2 = new JTextField(3);
-		gp7.add(textField_userPhoneNumber2);
-		JTextField textField_userPhoneNumber3 = new JTextField(4);
-		gp7.add(textField_userPhoneNumber3);
-		gridP1.add(gp7);
+		btnAddNewCustomer = new JButton("Add new customer");
+		listener = new ButtonListener("btnAddNewCustomer");
+		btnAddNewCustomer.addActionListener(listener);
+		addAndRemoveAccountsTab.add(btnAddNewCustomer);
 		
-		return gridP1;
+		JPanel p2 = new JPanel();
+		JLabel lblCustomerUserName =  new JLabel("user name");
+		p2.add(lblCustomerUserName);
+		JTextField textField_customerUserName = new JTextField(14);
+		p2.add(textField_customerUserName);
+		addAndRemoveAccountsTab.add(p2);
+		
+		JPanel p3 = new JPanel();
+		JLabel lblCustomerPassword =  new JLabel("password");
+		p3.add(lblCustomerPassword);
+		JPasswordField passwordField_customerPassword = new JPasswordField(14);
+		p3.add(passwordField_customerPassword);
+		addAndRemoveAccountsTab.add(p3);
+		
+		JPanel p4 = new JPanel();
+		JLabel lblCustomerFirstName =  new JLabel("first name");
+		p4.add(lblCustomerFirstName);
+		JTextField textField_customerFirstName = new JTextField(14);
+		p4.add(textField_customerFirstName);
+		addAndRemoveAccountsTab.add(p4);
+		
+		JPanel p5 = new JPanel();
+		JLabel lblCustomerLastName =  new JLabel("last name");
+		p5.add(lblCustomerLastName);
+		JTextField textField_customerLastName = new JTextField(14);
+		p5.add(textField_customerLastName);
+		addAndRemoveAccountsTab.add(p5);
+		
+		JPanel p6 = new JPanel();
+		JLabel lblCustomerAddress =  new JLabel("address");
+		p6.add(lblCustomerAddress);
+		JTextField textField_customerAddress = new JTextField(15);
+		p6.add(textField_customerAddress);
+		addAndRemoveAccountsTab.add(p6);
+		
+		JPanel p7 = new JPanel();
+		JLabel lblCustomerPhoneNumber =  new JLabel("phone number");
+		p7.add(lblCustomerPhoneNumber);
+		JTextField textField_customerPhoneNumber1 = new JTextField(3);
+		p7.add(textField_customerPhoneNumber1);
+		JTextField textField_customerPhoneNumber2 = new JTextField(3);
+		p7.add(textField_customerPhoneNumber2);
+		JTextField textField_customerPhoneNumber3 = new JTextField(4);
+		p7.add(textField_customerPhoneNumber3);
+		addAndRemoveAccountsTab.add(p7);
+		
+		JPanel p8 = new JPanel();
+		addAndRemoveAccountsTab.add(p8);
+		
+		btnAddNewCoach = new JButton("Add new coach");
+		listener = new ButtonListener("btnAddNewCoach");
+		btnAddNewCoach.addActionListener(listener);
+		addAndRemoveAccountsTab.add(btnAddNewCoach);
+		
+		JPanel p10 = new JPanel();
+		JLabel lblCoachUserName = new JLabel("user name");
+		p10.add(lblCoachUserName);
+		JTextField textField_coachUserName = new JTextField(14);
+		p10.add(textField_coachUserName);
+		addAndRemoveAccountsTab.add(p10);
+		
+		JPanel p11 = new JPanel();
+		JLabel lblCoachPassword = new JLabel("password");
+		p11.add(lblCoachPassword);
+		JPasswordField passwordField_coachPassword = new JPasswordField(14);
+		p11.add(passwordField_coachPassword);
+		addAndRemoveAccountsTab.add(p11);
+		
+		JPanel p12 = new JPanel();
+		JLabel lblCoachFirstName = new JLabel("first name");
+		p12.add(lblCoachFirstName);
+		JTextField textField_coachFirstName = new JTextField(14);
+		p12.add(textField_coachFirstName);
+		addAndRemoveAccountsTab.add(p12);
+		
+		JPanel p13 = new JPanel();
+		JLabel lblCoachLastName = new JLabel("last name");
+		p13.add(lblCoachLastName);
+		JTextField textField_coachLastName = new JTextField(14);
+		p13.add(textField_coachLastName);
+		addAndRemoveAccountsTab.add(p13);
+		
+		JPanel p14 = new JPanel();
+		JLabel lblCoachSalary = new JLabel("salary");
+		p14.add(lblCoachSalary);
+		JTextField textField_coachSalary = new JTextField(16);
+		p14.add(textField_coachSalary);
+		addAndRemoveAccountsTab.add(p14);
+		
+		JPanel p15 = new JPanel();
+		addAndRemoveAccountsTab.add(p15);
+		
+		btnAddNewTreasurer = new JButton("Add new treasurer");
+		listener = new ButtonListener("btnAddNewTreasurer");
+		btnAddNewTreasurer.addActionListener(listener);
+		addAndRemoveAccountsTab.add(btnAddNewTreasurer);
+		
+		JPanel p17 = new JPanel();
+		JLabel lblTreasurerUserName = new JLabel("user name");
+		p17.add(lblTreasurerUserName);
+		JTextField textField_treasurerUserName = new JTextField(14);
+		p17.add(textField_treasurerUserName);
+		addAndRemoveAccountsTab.add(p17);
+		
+		JPanel p18 = new JPanel();
+		JLabel lblTreasurerPassword = new JLabel("password");
+		p18.add(lblTreasurerPassword);
+		JPasswordField passwordField_treasurerPassword = new JPasswordField(14);
+		p18.add(passwordField_treasurerPassword);
+		addAndRemoveAccountsTab.add(p18);
+		
+		JPanel p19 = new JPanel();
+		JLabel lblTreasurerFirstName = new JLabel("first name");
+		p19.add(lblTreasurerFirstName);
+		JTextField textField_treasurerFirstName = new JTextField(14);
+		p19.add(textField_treasurerFirstName);
+		addAndRemoveAccountsTab.add(p19);
+		
+		JPanel p20 = new JPanel();
+		JLabel lblTreasurerLastName = new JLabel("last name");
+		p20.add(lblTreasurerLastName);
+		JTextField textField_treasurerLastName = new JTextField(14);
+		p20.add(textField_treasurerLastName);
+		addAndRemoveAccountsTab.add(p20);
+		
+		JPanel p21 = new JPanel();
+		addAndRemoveAccountsTab.add(p21);
+		
+		btnRemoveSelectedAccount = new JButton("Remove selected account");
+		listener = new ButtonListener("btnRemoveSelectedAccount");
+		btnRemoveSelectedAccount.addActionListener(listener);
+		addAndRemoveAccountsTab.add(btnRemoveSelectedAccount);
+		
+		return addAndRemoveAccountsTab;
 	}
 	
 	private JSplitPane incomeAndExpensesTab() {
@@ -260,13 +381,13 @@ public class TreasurerUI extends JFrame{
 		return incomeStatementInputPanel;
 	}
 	
-	private JPanel introPanel() {
-		JPanel introPanel = new JPanel(new GridBagLayout());
-		introPanel.setBackground(SystemColor.textHighlightText);
+	private JPanel headerPanel() {
+		JPanel headerPanel = new JPanel(new GridBagLayout());
+		headerPanel.setBackground(SystemColor.textHighlightText);
 		
-		introPanel.add(new JLabel(userName + " signed in as Treasurer"));
+		headerPanel.add(new JLabel(userName + " signed in as Treasurer"));
 		
-		return introPanel;
+		return headerPanel;
 	}
 	
 	private JMenuBar accountsMenuBar() {
