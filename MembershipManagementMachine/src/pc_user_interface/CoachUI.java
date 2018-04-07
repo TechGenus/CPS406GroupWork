@@ -78,7 +78,7 @@ public class CoachUI extends JFrame{
 			}
 		});
 		
-		class listListener implements ListSelectionListener
+		class ListListener implements ListSelectionListener
 		{
 			public void valueChanged(ListSelectionEvent e)
 			{
@@ -95,7 +95,7 @@ public class CoachUI extends JFrame{
 		
 		//layout panel stuff
 		list2 = list.toArray();
-		listListener userList = new listListener();
+		ListListener userList = new ListListener();
 		memberList = new JList(list2);
 		memberList.setFont(memberList.getFont().deriveFont(12f));
 		memberList.setEnabled(true);

@@ -529,7 +529,9 @@ public class TreasurerUI extends JFrame{
 		else if (btnDescription.equals("btnAddNewCustomer")) {
 			ArrayList<User> userList = ioWork.userGather();
 			for (int i = 0; i < userList.size(); i++) {
-				System.out.println(userList.get(i).getUserUsername());
+				if (userList.get(i).getUserUsername().equals(textField_customerUserName.getText())) {
+					throw new IOException("Error: User already exists");
+				}
 			}
 			
 			String cellPhoneNum = 	textField_customerPhoneNumber1.getText() + 
