@@ -13,6 +13,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicComboBoxUI.ItemHandler;
 
@@ -23,6 +25,12 @@ import java.awt.event.ItemListener;
 public class TreasurerUI extends JFrame{
 	private int				frameWidth 	= 800;
 	private int				frameHeight = 700;
+	
+	private IOWork			ioWork = new IOWork();
+	private ArrayList<User> usersList;
+	private JList 			accountsList;
+	private ListListener	listListener;
+	private User			selectedUser;
 	
 	private String			userName;
 	private Date			date;
@@ -48,11 +56,17 @@ public class TreasurerUI extends JFrame{
 	
 	private JSplitPane		accountsTab;
 	private JPanel			accountsSortingPanel, editAccountsTab, addAndRemoveAccountsTab;
-	private JList 			accountsList;
 	private JScrollPane 	accountsScrollPane;
 	private JTabbedPane		accountsOptionsTabbedPane;
 	private JButton			btnAdd10PercentDiscount, btnAdd10PercentPenalty, btnAddNewCustomer, btnAddNewCoach,
 							btnAddNewTreasurer, btnRemoveSelectedAccount;
+	private JTextArea		selectedAccountInfoTextArea;
+	private JTextField		textField_customerUserName, textField_customerFirstName, textField_customerLastName, 
+							textField_customerAddress, textField_customerPhoneNumber1, textField_customerPhoneNumber2,
+							textField_customerPhoneNumber3, textField_coachUserName, textField_coachFirstName,
+							textField_coachLastName, textField_coachSalary, textField_treasurerUserName,
+							textField_treasurerFirstName, textField_treasurerLastName;
+	private JPasswordField	passwordField_customerPassword;
 	
 	public TreasurerUI(String frameTitle, String userName) {
 		setTitle(frameTitle);
@@ -86,12 +100,16 @@ public class TreasurerUI extends JFrame{
 		return tabbedPane;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private JSplitPane accountsTab() {
 		accountsTab = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		accountsTab.setDividerLocation(5 * frameWidth / 8);
 		accountsTab.setEnabled(false);
 		
-		accountsList = 				new JList<JLabel>();
+		usersList = 				ioWork.userGather();
+		accountsList = 				new JList(usersList.toArray());
+		accountsList.setEnabled(true);
+		accountsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		accountsScrollPane = 		new JScrollPane(accountsList);
 		accountsSortingPanel = 		new JPanel();
 		
@@ -128,7 +146,7 @@ public class TreasurerUI extends JFrame{
 		JPanel p1 = new JPanel(new BorderLayout()); 
 		JLabel lblSelectedAccountInfo = new JLabel("Selected account information:");
 		p1.add(lblSelectedAccountInfo, BorderLayout.NORTH);
-		JTextArea selectedAccountInfoTextArea = new JTextArea();
+		selectedAccountInfoTextArea = new JTextArea();
 		p1.add(selectedAccountInfoTextArea, BorderLayout.CENTER);
 		editAccountsTab.add(p1);
 		
@@ -166,46 +184,46 @@ public class TreasurerUI extends JFrame{
 		JPanel p2 = new JPanel();
 		JLabel lblCustomerUserName =  new JLabel("user name");
 		p2.add(lblCustomerUserName);
-		JTextField textField_customerUserName = new JTextField(14);
+		textField_customerUserName = new JTextField(14);
 		p2.add(textField_customerUserName);
 		addAndRemoveAccountsTab.add(p2);
 		
 		JPanel p3 = new JPanel();
 		JLabel lblCustomerPassword =  new JLabel("password");
 		p3.add(lblCustomerPassword);
-		JPasswordField passwordField_customerPassword = new JPasswordField(14);
+		passwordField_customerPassword = new JPasswordField(14);
 		p3.add(passwordField_customerPassword);
 		addAndRemoveAccountsTab.add(p3);
 		
 		JPanel p4 = new JPanel();
 		JLabel lblCustomerFirstName =  new JLabel("first name");
 		p4.add(lblCustomerFirstName);
-		JTextField textField_customerFirstName = new JTextField(14);
+		textField_customerFirstName = new JTextField(14);
 		p4.add(textField_customerFirstName);
 		addAndRemoveAccountsTab.add(p4);
 		
 		JPanel p5 = new JPanel();
 		JLabel lblCustomerLastName =  new JLabel("last name");
 		p5.add(lblCustomerLastName);
-		JTextField textField_customerLastName = new JTextField(14);
+		textField_customerLastName = new JTextField(14);
 		p5.add(textField_customerLastName);
 		addAndRemoveAccountsTab.add(p5);
 		
 		JPanel p6 = new JPanel();
 		JLabel lblCustomerAddress =  new JLabel("address");
 		p6.add(lblCustomerAddress);
-		JTextField textField_customerAddress = new JTextField(15);
+		textField_customerAddress = new JTextField(15);
 		p6.add(textField_customerAddress);
 		addAndRemoveAccountsTab.add(p6);
 		
 		JPanel p7 = new JPanel();
 		JLabel lblCustomerPhoneNumber =  new JLabel("phone number");
 		p7.add(lblCustomerPhoneNumber);
-		JTextField textField_customerPhoneNumber1 = new JTextField(3);
+		textField_customerPhoneNumber1 = new JTextField(3);
 		p7.add(textField_customerPhoneNumber1);
-		JTextField textField_customerPhoneNumber2 = new JTextField(3);
+		textField_customerPhoneNumber2 = new JTextField(3);
 		p7.add(textField_customerPhoneNumber2);
-		JTextField textField_customerPhoneNumber3 = new JTextField(4);
+		textField_customerPhoneNumber3 = new JTextField(4);
 		p7.add(textField_customerPhoneNumber3);
 		addAndRemoveAccountsTab.add(p7);
 		
@@ -220,7 +238,7 @@ public class TreasurerUI extends JFrame{
 		JPanel p10 = new JPanel();
 		JLabel lblCoachUserName = new JLabel("user name");
 		p10.add(lblCoachUserName);
-		JTextField textField_coachUserName = new JTextField(14);
+		textField_coachUserName = new JTextField(14);
 		p10.add(textField_coachUserName);
 		addAndRemoveAccountsTab.add(p10);
 		
@@ -234,21 +252,21 @@ public class TreasurerUI extends JFrame{
 		JPanel p12 = new JPanel();
 		JLabel lblCoachFirstName = new JLabel("first name");
 		p12.add(lblCoachFirstName);
-		JTextField textField_coachFirstName = new JTextField(14);
+		textField_coachFirstName = new JTextField(14);
 		p12.add(textField_coachFirstName);
 		addAndRemoveAccountsTab.add(p12);
 		
 		JPanel p13 = new JPanel();
 		JLabel lblCoachLastName = new JLabel("last name");
 		p13.add(lblCoachLastName);
-		JTextField textField_coachLastName = new JTextField(14);
+		textField_coachLastName = new JTextField(14);
 		p13.add(textField_coachLastName);
 		addAndRemoveAccountsTab.add(p13);
 		
 		JPanel p14 = new JPanel();
 		JLabel lblCoachSalary = new JLabel("salary");
 		p14.add(lblCoachSalary);
-		JTextField textField_coachSalary = new JTextField(16);
+		textField_coachSalary = new JTextField(16);
 		p14.add(textField_coachSalary);
 		addAndRemoveAccountsTab.add(p14);
 		
@@ -263,7 +281,7 @@ public class TreasurerUI extends JFrame{
 		JPanel p17 = new JPanel();
 		JLabel lblTreasurerUserName = new JLabel("user name");
 		p17.add(lblTreasurerUserName);
-		JTextField textField_treasurerUserName = new JTextField(14);
+		textField_treasurerUserName = new JTextField(14);
 		p17.add(textField_treasurerUserName);
 		addAndRemoveAccountsTab.add(p17);
 		
@@ -277,14 +295,14 @@ public class TreasurerUI extends JFrame{
 		JPanel p19 = new JPanel();
 		JLabel lblTreasurerFirstName = new JLabel("first name");
 		p19.add(lblTreasurerFirstName);
-		JTextField textField_treasurerFirstName = new JTextField(14);
+		textField_treasurerFirstName = new JTextField(14);
 		p19.add(textField_treasurerFirstName);
 		addAndRemoveAccountsTab.add(p19);
 		
 		JPanel p20 = new JPanel();
 		JLabel lblTreasurerLastName = new JLabel("last name");
 		p20.add(lblTreasurerLastName);
-		JTextField textField_treasurerLastName = new JTextField(14);
+		textField_treasurerLastName = new JTextField(14);
 		p20.add(textField_treasurerLastName);
 		addAndRemoveAccountsTab.add(p20);
 		
@@ -450,6 +468,15 @@ public class TreasurerUI extends JFrame{
 		return helpMenu;
 	}
 	
+	public class ListListener implements ListSelectionListener {
+		public void valueChanged(ListSelectionEvent e) {
+			if (e.getValueIsAdjusting() == false) {
+				ListModel hold = accountsList.getModel(); 
+				selectedUser = ((User) (hold.getElementAt(accountsList.getSelectedIndex())));
+			}
+		}
+	}
+	
 	public class ButtonListener implements ActionListener {
 		private String btnDescription;
 		
@@ -499,6 +526,33 @@ public class TreasurerUI extends JFrame{
 		else if (btnDescription.equals("fmbtnOpenIncomeStatement")) {
 			openIncomeStatement();
 		}
+		else if (btnDescription.equals("btnAddNewCustomer")) {
+			ArrayList<User> userList = ioWork.userGather();
+			for (int i = 0; i < userList.size(); i++) {
+				System.out.println(userList.get(i).getUserUsername());
+			}
+			
+			String cellPhoneNum = 	textField_customerPhoneNumber1.getText() + 
+									textField_customerPhoneNumber2.getText() + 
+									textField_customerPhoneNumber3.getText();
+			
+			User newCustomer = new User(textField_customerFirstName.getText(), 
+										textField_customerLastName.getText(),
+										textField_customerAddress.getText(),
+										cellPhoneNum,
+										textField_customerUserName.getText(),
+										passwordField_customerPassword.getPassword().toString());
+			
+			ioWork.serialize(newCustomer);
+			JOptionPane.showMessageDialog(null, "Added new user");
+		}
+		else if (btnDescription.equals("btnRemoveSelectedAccount")) {
+			
+		}
+	}
+	
+	private void removeSelectedAccountFile() {
+		// todo:--------------------------------------------------------------------------------------------------make JList FIrst
 	}
 	
 	private void outputIncomeStatement() {
