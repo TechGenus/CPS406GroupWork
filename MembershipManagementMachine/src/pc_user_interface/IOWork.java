@@ -68,11 +68,37 @@ public class IOWork
 			{
 				if(results.get(i).getUserMissedPayments() < results.get(f).getUserMissedPayments())
 				{
-					
+					User temp = results.get(i);
+					results.set(i, results.get(f));
+					results.set(f, temp);
 				}
 			}
 		}
 		return results;
 	}
 	//Sort attended classes by greatest to least
+	public ArrayList<User> attendedSort(ArrayList<User> holder)
+	{
+		ArrayList<User> results = holder;
+		for(int i = 0;i < results.size();i++)
+		{
+			if(results.get(i).getUserFlag() != 2)
+			{
+				results.remove(i);
+			}
+		}
+		for(int i = 0;i < results.size();i++)
+		{
+			for(int f = 0;f < results.size();f++)
+			{
+				if(results.get(i).getUserAttendedClasses() < results.get(f).getUserAttendedClasses())
+				{
+					User temp = results.get(i);
+					results.set(i, results.get(f));
+					results.set(f, temp);
+				}
+			}
+		}
+		return results;
+	}
 }
